@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import Root from "./customRoutes/PublicRoutes";
+import PrivateRoute from "./customRoutes/PrivateRoutes";
+import Loading from "./UI/Loading";
+const Login = lazy(() => {
+  return import("./UI/Login");
+});
+const AddItem = lazy(() => {
+  return import("./UI/AddItem");
+});
+const AddAsset = lazy(() => {
+  return import("./UI/AddAsset");
+});
+const AddStock = lazy(() => {
+  return import("./UI/AddStock");
+});
+const AddCustomer = lazy(() => {
+  return import("./UI/AddCustomer");
+});
+const AddSupplier = lazy(() => {
+  return import("./UI/AddSupplier");
+});
+const CreateBranch = lazy(() => {
+  return import("./UI/CreateBranch");
+});
 
-function App() {
+const router = createBrowserRouter([
+  { path: "/", Component: Root, children: [{ index: true, Component: Login }] },
+  {
+    path: "/private",
+    Component: PrivateRoute,
+    children: [
+      { path: "/private/add-item", Component: AddItem },
+      { path: "/private/add-asset", Component: AddAsset },
+      { path: "/private/add-stock", Component: AddStock },
+      { path: "/private/add-customer", Component: AddCustomer },
+      { path: "/private/add-supplier", Component: AddSupplier },
+      { path: "/private/create-branch", Component: CreateBranch },
+    ],
+  },
+]);
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Suspense fallback={<Loading />}>
+      <RouterProvider router={router}></RouterProvider>
+    </Suspense>
   );
-}
+};
 
 export default App;

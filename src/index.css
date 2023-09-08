@@ -1,13 +1,63 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.PhoneInput {
+  display: grid;
+  grid-template-columns: 30px calc(100% - 30px);
+  overflow: hidden;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  width: 100%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.PhoneInput:focus {
+  border: 2px solid rgb(0, 0, 0, 0.5);
+}
+
+.PhoneInput input {
+  position: relative;
+  border-bottom: 0px;
+  width: 100%;
+  border: 0px;
+}
+.PhoneInput input:focus {
+  border: 0px;
+}
+
+.PhoneInput .PhoneInputCountry {
+  font-size: 0px;
+  border: 1px solid transparent;
+  height: 18px;
+  overflow: hidden;
+}
+
+.PhoneInput .PhoneInputCountry .PhoneInputCountryIcon {
+  position: relative;
+  height: 100%;
+  position: relative;
+  top: 5px;
+  left: 5px;
+}
+
+.PhoneInput .PhoneInputCountry .PhoneInputCountryIcon img {
+  width: 20px;
+}
+
+.PhoneInput .PhoneInputCountry .PhoneInputCountrySelect {
+  height: 20px;
+  width: 30px;
+  text-align: center;
+  position: absolute;
+  z-index: 10;
+  opacity: 0;
+  font-size: 13px;
+}
+
+.PhoneInput .PhoneInputCountry .PhoneInputCountrySelectArrow {
+  display: none;
+}
+
+input.extend {
+  width: 175px;
 }

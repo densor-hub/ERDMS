@@ -18,7 +18,7 @@ const NavBar = () => {
   useOutsideClicked(MenuRef, setShowProfileMenu, false, [ShowProfileMenu]);
 
   return (
-    <main className="w-full h-12 bg-slate-300 flex justify-end border-b-4 border-b-slate-700">
+    <main className="w-full h-12 bg-slate-300 flex justify-end border-b-4 border-b-slate-700 relative z-10">
       <section className="relative top-2">
         <span className="mr-10">
           <Link to={"/"}>

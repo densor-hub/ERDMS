@@ -14,7 +14,7 @@ const MenuContent = ({ currentContent }) => {
               return (
                 <div
                   key={index}
-                  className={index === 0 && "border-t-4 border-slate-300"}
+                  className={index === 0 ? "border-t-4 border-slate-300" : {}}
                 >
                   <MenuContentBody element={element} />
                 </div>
@@ -35,19 +35,23 @@ const MenuContentBody = ({ element }) => {
     <div className="text-white  text-left w-full ] ">
       {element?.children ? (
         <section className="w-full">
-          <div className="h-12  flex items-center ">
+          <div className="h-12  flex items-center">
             <button
-              className="flex hover:text-yellow-600"
+              className={
+                !showChildren
+                  ? "flex hover:text-white text-slate-400 pl-7"
+                  : "flex text-yellow-600 pl-7"
+              }
               onClick={() => {
                 setShowChildren(!showChildren);
               }}
             >
-              <span className="flex items-center justify-left relative left-[30%]">
+              <span className="flex items-center justify-left relative">
                 <span
                   className={
                     showChildren
-                      ? "rotate-90 relative right-2 transition-transform"
-                      : "rotate-360 relative right-2 transition-transform"
+                      ? "rotate-90 relative right-2 transition-transform "
+                      : "rotate-360 relative right-2 transition-transform "
                   }
                 >
                   <AiOutlineRight color={"white"} />
@@ -56,17 +60,14 @@ const MenuContentBody = ({ element }) => {
               </span>
             </button>
           </div>
-          <section className="bg-slate-400 text-black ">
+          <section className="bg-slate-400 text-zinc-700 ">
             {showChildren &&
               element.children.map((childrenElement, index) => {
                 return (
-                  <div
-                    key={index}
-                    className="w-full h-7  hover:text-yellow-400"
-                  >
+                  <div key={index} className="w-full h-7  hover:text-white">
                     <Link
                       to={`/${createPathname(childrenElement?.title)}`}
-                      className="relative left-[30%]"
+                      className="relative left-16 "
                     >
                       {childrenElement?.title}
                     </Link>
@@ -79,7 +80,7 @@ const MenuContentBody = ({ element }) => {
         <div className="h-12 flex items-center ">
           <Link
             to={`/${createPathname(element?.title)}`}
-            className="relative left-[10%]"
+            className="relative left-[10%] text-slate-400 hover:text-white"
           >
             <span className="flex items-center ">
               <span className="relative top-1" style={{ visibility: "hidden" }}>

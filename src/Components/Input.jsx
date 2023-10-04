@@ -7,6 +7,7 @@ const Input = ({
   refValue,
   placeholder,
   style,
+  onChange,
 }) => {
   // refValue is the ref of the input thats the input into required collection or not required collection
   //condition is the boolean value that the input use to render valid (white) or invalid(border red) states
@@ -20,6 +21,7 @@ const Input = ({
       ref={refValue}
       placeholder={placeholder}
       className={!condition ? style?.valid : style?.invalid}
+      onChange={onChange}
     ></input>
   );
 };

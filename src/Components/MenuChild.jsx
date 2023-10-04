@@ -1,4 +1,5 @@
 const MenuChild = (prop) => {
+  const Icon = prop?.icon;
   return (
     <button
       onClick={() => {
@@ -15,7 +16,9 @@ const MenuChild = (prop) => {
       }
     >
       <main className="flex justify-center flex-col items-center text-center text-sm text-white ">
-        <div>{prop.children}</div>
+        <div>
+          <Icon size={30} />
+        </div>
         <div>{String(prop.label)}</div>
       </main>
     </button>

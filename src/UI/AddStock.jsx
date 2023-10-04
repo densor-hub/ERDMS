@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import Form from "../Components/AddForm";
+import Form from "../Components/Form";
 import NavBar from "../Components/NavBar";
 import Menu from "../Components/Menu";
 const AddStock = () => {

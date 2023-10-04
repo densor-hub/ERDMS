@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import Root from "./customRoutes/PublicRoutes";
 import PrivateRoute from "./customRoutes/PrivateRoutes";
 import Loading from "./UI/Loading";
+
 const Login = lazy(() => {
   return import("./UI/Login");
 });
@@ -25,6 +26,14 @@ const CreateBranch = lazy(() => {
   return import("./UI/CreateBranch");
 });
 
+const PurchaseItem = lazy(() => {
+  return import("./UI/PurchaseItems");
+});
+
+const AddEmployee = lazy(() => {
+  return import("./UI/AddEmployee");
+});
+
 const router = createBrowserRouter([
   { path: "/", Component: Root, children: [{ index: true, Component: Login }] },
   {
@@ -37,6 +46,8 @@ const router = createBrowserRouter([
       { path: "/private/add-customer", Component: AddCustomer },
       { path: "/private/add-supplier", Component: AddSupplier },
       { path: "/private/create-branch", Component: CreateBranch },
+      { path: "/private/purchase", Component: PurchaseItem },
+      { path: "/private/employ", Component: AddEmployee },
     ],
   },
 ]);

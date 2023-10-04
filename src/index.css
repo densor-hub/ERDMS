@@ -61,3 +61,232 @@
 input.extend {
   width: 175px;
 }
+
+//PURCHASING FORM
+.PURCHASEComponentContainer {
+  display: flex;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  position: relative;
+  background-color: white;
+  font-size: medium;
+  overflow-x: hidden;
+  z-index: 0;
+}
+
+.PURCHASEComponentContainer .heading {
+  text-align: center;
+  position: relative;
+  top: 40px;
+  font-size: large;
+  margin-bottom: 10px;
+}
+
+.PURCHASEComponentContainer .heading .feedback {
+  position: relative;
+  color: white;
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+  color: black;
+}
+
+.PURCHASEComponentContainer form {
+  position: relative;
+  top: 40px;
+}
+
+.PURCHASEComponentContainer td {
+  height: 35px;
+  width: 100px;
+  text-align: left;
+}
+
+.PURCHASEComponentContainer .IsRequired {
+  display: grid;
+  grid-template-columns: 90% 10%;
+}
+
+.PURCHASEComponentContainer .RequiredHash {
+  height: 10px;
+  position: relative;
+  top: 20%;
+  right: 5px;
+}
+
+.PURCHASEComponentContainer form input {
+  border: 0px;
+  border-bottom: 3px solid #cbd5e1;
+  color: black;
+  position: relative;
+  right: 5px;
+  width: 150px;
+}
+
+.PURCHASEComponentContainer .form4 input {
+  position: relative;
+  right: 20px;
+}
+
+.PURCHASEComponentContainer #piecesInPacks {
+  position: relative;
+  left: -8px;
+}
+
+.PURCHASEComponentContainer .form1,
+.PURCHASEComponentContainer .form3 {
+  height: 40px;
+}
+
+.FormRightside {
+  background-color: #cbd5e1;
+}
+
+.FormRightside button {
+  width: 100%;
+  height: 50px;
+  color: white;
+  position: relative;
+}
+
+.FormRightside button:hover,
+.FormRightside button:focus {
+  color: white;
+  font: large;
+  border-top: 3px solid rgb(155, 106, 106);
+}
+
+.itemsBeingPurchasedContainer {
+  background-color: #f3f3f3;
+  color: rgb(46, 51, 17);
+  font-size: small;
+  width: 100%;
+  position: relative;
+}
+
+.PURCHASEComponentContainer
+  .itemsBeingPurchasedContainer
+  .listOfItemsContainer {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: relative;
+  top: -20.5px;
+}
+
+.PiecesInPackContainerDiv {
+  text-align: center;
+  position: relative;
+  border-top: transparent;
+  color: white;
+  background-color: rgb(150, 150, 129);
+  border: 1px solid black;
+  border-top: 0px;
+  min-height: 5px;
+}
+
+.PiecesInPackContainerDiv span {
+  padding: 5px;
+}
+
+.PURCHASEComponentContainer #btn,
+.PurchaseItemCompSwitchPopUp #btn {
+  background-color: #334155;
+  color: white;
+  width: 100px;
+  height: 40px;
+  border: 2px solid white;
+  border-radius: 15px;
+  position: relative;
+  font-size: large;
+}
+
+.PURCHASEComponentContainer #btn:hover,
+.PURCHASEComponentContainer #btn:focus,
+.PurchaseItemCompSwitchPopUp #btn:hover,
+.PurchaseItemCompSwitchPopUp #btn:focus {
+  background-color: white;
+  color: rgb(40, 47, 6);
+  border: 2px solid red;
+}
+
+#slecteditemDeleteBTN {
+  background-color: rgb(102, 110, 66);
+  color: white;
+  width: 60px;
+  height: 25px;
+  border: 2px solid white;
+  border-radius: 15px;
+  position: relative;
+  left: -6px;
+  font-size: small;
+}
+
+#slecteditemDeleteBTN:hover,
+#slecteditemDeleteBTN:focus {
+  background-color: white;
+  color: rgb(40, 47, 6);
+  border: 2px solid red;
+}
+
+.PURCHASEComponentContainer .sellItemsListFilter {
+  width: 200px;
+  background-color: white;
+  color: rgb(46, 51, 17);
+  z-index: 100;
+  max-height: 120px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-left: -55px;
+  margin-top: 9px;
+}
+
+.PURCHASEComponentContainer .filteredItem,
+.PURCHASEComponentContainer .flteredSuppliers {
+  font-size: small;
+  width: 100%;
+  padding: 10px;
+  border-top: 0px;
+  background-color: rgb(102, 110, 66);
+  color: white;
+  position: relative;
+  border: 0px;
+}
+
+.PURCHASEComponentContainer .filteredItem:hover,
+.PURCHASEComponentContainer .filteredItem:focus,
+.PURCHASEComponentContainer .flteredSuppliers:focus,
+.PURCHASEComponentContainer .flteredSuppliers:hover {
+  background-color: rgb(220, 217, 217);
+  color: rgb(46, 51, 17);
+  border: 1px solid rgb(102, 110, 66);
+}
+
+.PurchaseItemCompSwitchPopUp {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 200;
+  background-color: rgb(0, 0, 0, 0.5);
+  width: 100%;
+  height: 120vh;
+}
+
+.PurchaseItemCompSwitchPopUp span {
+  color: white;
+}
+
+.PurchaseItemCompSwitchPopUp table {
+  margin: 0 auto;
+  position: relative;
+  top: 30%;
+  font-size: large;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: rgb(0, 0, 0, 0.5);
+  height: 250px;
+  padding: 50px;
+  border: 1px solid white;
+  width: 95%;
+  text-align: center;
+}

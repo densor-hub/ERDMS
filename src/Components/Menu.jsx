@@ -18,9 +18,14 @@ const Menu = () => {
     {
       id: "stocks",
       content: [
-        { title: "Add item" },
-        { title: "Add stock" },
-        { title: "Check price" },
+        {
+          title: "Item",
+          children: [{ title: "Add new item" }, { title: "Check item price" }],
+        },
+        {
+          title: "Stock",
+          children: [{ title: "Add stock" }, { title: "Check quantity" }],
+        },
         { title: "Check quantity" },
         { title: "Records" },
       ],
@@ -97,71 +102,31 @@ const Menu = () => {
   //when outside of Menu is Clicked
   useOutsideClicked(MenuRef, setCurrentContent, [], [currentContent]);
 
+  const MenuItems = [
+    { label: "Asset", icon: BsCashCoin },
+    { label: "Stocks", icon: MdOutlineInventory },
+    { label: "Sales", icon: BsCart4 },
+    { label: "Financing", icon: GiTakeMyMoney },
+    { label: "Procurement", icon: BiCartDownload },
+    { label: "Configure", icon: AiOutlineSetting },
+    { label: "Human relation", icon: PiUsersThreeDuotone },
+  ];
+
   return (
     <main className={"flex w-fit"} ref={MenuRef}>
       <section className="w-32 min-h-screen  bg-slate-700 ">
-        <MenuChild
-          label={"Asset"}
-          onClick={onClick}
-          content={content}
-          currentContent={currentContent}
-        >
-          <BsCashCoin color="white" size={30} />
-        </MenuChild>
-
-        <MenuChild
-          label={"Stocks"}
-          onClick={onClick}
-          content={content}
-          currentContent={currentContent}
-        >
-          <MdOutlineInventory color="white" size={30} />
-        </MenuChild>
-
-        <MenuChild
-          label={"Sales"}
-          onClick={onClick}
-          content={content}
-          currentContent={currentContent}
-        >
-          <BsCart4 color="white" size={30} />
-        </MenuChild>
-
-        <MenuChild
-          label={"Financing"}
-          onClick={onClick}
-          content={content}
-          currentContent={currentContent}
-        >
-          <GiTakeMyMoney color="white" size={30} />
-        </MenuChild>
-
-        <MenuChild
-          label={"Procurement"}
-          onClick={onClick}
-          content={content}
-          currentContent={currentContent}
-        >
-          <BiCartDownload color="white" size={30} />
-        </MenuChild>
-
-        <MenuChild
-          label={"Configure"}
-          onClick={onClick}
-          content={content}
-          currentContent={currentContent}
-        >
-          <AiOutlineSetting color="white" size={30} />
-        </MenuChild>
-
-        <MenuChild
-          label={"Human Relation"}
-          onClick={onClick}
-          content={content}
-          currentContent={currentContent}
-        >
-          <PiUsersThreeDuotone color="white" size={30} />
-        </MenuChild>
+        {MenuItems?.map((elements, index) => {
+          return (
+            <MenuChild
+              key={index}
+              label={elements?.label}
+              onClick={onClick}
+              content={content}
+              currentContent={currentContent}
+              icon={elements.icon}
+            />
+          );
+        })}
       </section>
 
       <section

@@ -1,88 +1,75 @@
 import { useState, useRef, useEffect } from "react";
-import Form from "../Components/AddForm";
+import Form from "../Components/Form";
 import NavBar from "../Components/NavBar";
 import Menu from "../Components/Menu";
 const AddAsset = () => {
-  const Submit = () => {};
-  const Cancel = () => {};
-
-  //refs
-  const RequiredRefs = useRef([]);
-  const addToRequiredRefs = (element) => {
-    if (element && !RequiredRefs?.current?.includes(element)) {
-      RequiredRefs.current?.push(element);
-    }
-  };
-
-  //feedbacks(error or success messages)
-  const [feedback, setFeedback] = useState("");
-
-  //bools for validating input fields
-  const [bools, setBools] = useState({
-    itemName: false,
-    Asset_type: false,
-    Identification: false,
-    Description: false,
-  });
-
-  const formContent = [
+  const [validatedData_FromForm, setValidatedData_FromForm] = useState({});
+  const [formData, setformData] = useState([
     {
       label: "Item name",
+      data: "",
       input: {
         type: "text",
+        required: true,
         autoComplete: "off",
-        placeholder: " Enter name",
-        refValue: addToRequiredRefs,
-        condition: bools.itemName,
+      },
+      validCondintion: (itemanme) => {
+        if (itemanme.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
       },
     },
     {
       label: "Select type",
+      data: "",
       input: {
         type: "select",
+        required: true,
         autoComplete: "off",
         placeholder: " Select type",
-        refValue: addToRequiredRefs,
-        condition: bools.Asset_type,
-        options: [
-          "Vehicle",
-          "Appartment",
-          "Computer",
-          "Laptop",
-          "Tool",
-          "Other",
-        ],
       },
+      children: [
+        "Vehicle",
+        "Appartment",
+        "Computer",
+        "Laptop",
+        "Tool",
+        "Other",
+      ],
     },
     {
       label: "Identification",
+      data: "",
       input: {
         type: "text",
+        required: true,
         autoComplete: "off",
-        placeholder: " Plate , House or Serial Number",
-        refValue: addToRequiredRefs,
-        condition: bools.Identification,
+        placeholder: " Car , House or Serial Number",
+      },
+      validCondintion: (id) => {
+        if (id.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
       },
     },
     {
       label: "Description",
+      data: "",
       input: {
         type: "textarea",
+        required: true,
         autoComplete: "off",
         placeholder: " Short description",
-        refValue: addToRequiredRefs,
-        condition: bools.Description,
       },
     },
-  ];
+  ]);
 
-  useEffect(() => {
-    if (feedback) {
-      setTimeout(() => {
-        setFeedback("");
-      }, 3000);
-    }
-  });
+  console.log(validatedData_FromForm);
+
   return (
     <main className="overflow-x-hidden">
       <section className="flex">
@@ -92,11 +79,10 @@ const AddAsset = () => {
           <NavBar />
           <div className="relative top-14 w-fit mx-auto">
             <Form
-              formContent={formContent}
-              OnSubmit={Submit}
-              OnCancel={Cancel}
               formTitle={"Add Asset"}
-              feedback={feedback}
+              formData={formData}
+              setformData={setformData}
+              setValidatedData_FromForm={setValidatedData_FromForm}
             ></Form>
           </div>
         </section>

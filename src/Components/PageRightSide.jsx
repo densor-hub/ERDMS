@@ -1,5 +1,5 @@
 import "../index.css";
-const FormRightSide = ({ appName, actions }) => {
+const PageRightSide = ({ appName, actions }) => {
   return (
     <div className="FormRightside w-40">
       <div className="py-5 text-center text-md font-bold text-slate-700">
@@ -25,4 +25,4 @@ const FormRightSide = ({ appName, actions }) => {
   );
 };
 
-export default FormRightSide;
+export default PageRightSide;

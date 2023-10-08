@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const ProgresBar = ({ content, currentContent }) => {
-  const [contentArray, setContentArray] = useState("");
   const [progressed, setProgressed] = useState([]);
 
   let gridColumns = "";

@@ -7,7 +7,7 @@ const MenuContent = ({ currentContent }) => {
   //current content from Menu in UI
   return (
     currentContent?.content?.length > 0 && (
-      <main className="bg-slate-600 min-h-screen h-full ">
+      <main className="bg-slate-600 min-h-[560px] h-full">
         <div className="pt-11 ">
           {currentContent?.content?.length > 0 &&
             currentContent?.content.map((element, index) => {

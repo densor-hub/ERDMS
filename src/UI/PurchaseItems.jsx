@@ -3,11 +3,11 @@ import NavBar from "../Components/NavBar";
 import Menu from "../Components/Menu";
 const PurchaseItems = () => {
   return (
-    <main className="flex w-screen h-screen overflow-x-hidden">
+    <main className="flex w-screen h-screen overflow-x-hidden bg-slate-700 ">
       <Menu />
-      <section className="w-full">
+      <section className="w-full min-h-[565px]  overflow-y-hidden">
         <NavBar />
-        <div className="">
+        <div className="min-h-[calc(565-50px)] h-full ">
           <PurchaseForm TypeOfPurchase={"Purchase"}></PurchaseForm>
         </div>
       </section>

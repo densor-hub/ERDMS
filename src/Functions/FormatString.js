@@ -177,10 +177,7 @@ export const replaceWhiteSpaceWithDash = (username) => {
       }
 
       if (usernameInUrl !== "") {
-        return usernameInUrl
-          ?.trim()
-          ?.slice(1, usernameInUrl?.trim()?.length)
-          ?.toLowerCase();
+        return usernameInUrl?.trim()?.slice(1, usernameInUrl?.trim()?.length);
       }
     }
   }

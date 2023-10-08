@@ -2,7 +2,14 @@ import { useState } from "react";
 import { v4 as uuid } from "uuid";
 import { convertMonthTo_ALPHABETS } from "../Functions/DateFunctions";
 
-const List = ({ CompleteData, Columns, OnTopOfTable, Actions, Date }) => {
+const List = ({
+  CompleteData,
+  Columns,
+  OnTopOfTable,
+  Actions,
+  Date,
+  onCancel,
+}) => {
   var lengthOfArray;
   var gridColumns = "";
 
@@ -78,7 +85,7 @@ const List = ({ CompleteData, Columns, OnTopOfTable, Actions, Date }) => {
           </div>
         )}
 
-        <section className=" h-[calc(100vh-195px)] min-h-[319px] w-full">
+        <section className="h-[calc(100vh-170px)] min-h-[319px] w-full overflow-y-scroll">
           {Columns?.data &&
             Columns?.data?.length > 0 &&
             Columns?.data?.map((item, index) => {

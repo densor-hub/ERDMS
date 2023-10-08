@@ -18,7 +18,7 @@ const Modal = ({
             </tr>
 
             <tr>
-              <td>
+              <td className="text-center py-2">
                 <button
                   type="submit"
                   onClick={(e) => {

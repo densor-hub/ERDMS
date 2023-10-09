@@ -36,8 +36,6 @@ const Form = forwardRef(
       setCurrentContent,
       //the setter fuction of the state currentContent (string) which is used to conditionally form based on the next or previous
       //for setting current content dispayed in the form based on the next and previous provided in CONTENT
-      fileInclusive,
-      //Object{allowedMimeTypes=[], } - for specifying whether a file upload is need.
       Styles,
       //for styling the form incase default style is not preffered
       onSubmit,
@@ -47,15 +45,15 @@ const Form = forwardRef(
     },
     ref
   ) => {
-    const FaUser = fileInclusive?.fileIcon;
     useImperativeHandle(ref, () => {
       return {
         inputRefs: RequiredRefs,
-        clearInputs: cancelOperation,
+        cancelOperation: cancelOperation,
+        clearInputs: clearInputs,
       };
     });
 
-    const [ValidatedData_FromForm, setValidatedData_FromForm] = useState({});
+    let validatedData = useRef({});
     const [feedback, setFeedback] = useState("");
     const inputStyle = {
       valid: "border-2  border-slate-200 rounded-lg w-full",
@@ -76,6 +74,17 @@ const Form = forwardRef(
       }
     };
 
+    //for file uploader
+    const setFileFxnRefs = useRef([]);
+    const addToSetFileFxnRefs = (element) => {
+      if (
+        formData?.filter((ele) => {
+          return ele?.input?.type.toLowerCase()?.includes("file");
+        }).length > setFileFxnRefs?.current?.length
+      ) {
+        setFileFxnRefs.current.push(element);
+      }
+    };
     //for type select
     const selectedValueFxnRefs = useRef([]);
     const addToSelectedValueFxns = (element) => {
@@ -113,9 +122,6 @@ const Form = forwardRef(
       }
     };
 
-    //file upload
-    const [file, setFile] = useState(fileInclusive?.fileUploaded);
-
     //feedback
     useEffect(() => {
       if (feedback) {
@@ -125,134 +131,208 @@ const Form = forwardRef(
       }
     });
 
-    //file
+    //for setting file
     useEffect(() => {
-      if (!file && formData?.image) {
-      } else if (file && !formData?.image) {
-        setValidatedData_FromForm((p) => {
-          return { ...p, image: file };
-        });
-      }
-    }, [formData?.image, file, fileInclusive?.fileInclusive]);
+      formData?.forEach((element) => {
+        //for files
+        if (element?.input?.type === "file") {
+          setFileFxnRefs?.current?.find((Ref, i) => {
+            if (
+              Ref?.uploadFileInputRef?.name?.toLowerCase()?.trim() ===
+              element?.label?.toLowerCase()?.trim()
+            ) {
+              if (Ref?.uploadFileInputRef?.files?.length <= 0) {
+                Ref.setFile(element?.data);
+              }
+            }
+          });
+        }
+      });
+    }, [setFileFxnRefs]);
 
     const ON_SUBMIT = (e) => {
       e.preventDefault();
       let validityChecked = [];
 
       formData?.forEach((element, index) => {
-        let ref = RequiredRefs.current?.find((ref) => {
-          return ref?.name?.toLowerCase() === element?.label?.toLowerCase();
-        });
-
-        if (ref !== null && ref !== undefined) {
-          if (element.input?.required) {
-            if (!ref?.value) {
-              ref.style.borderColor = "red";
-              setFeedback("Please enter all required fields.");
-              return (validityChecked[index] = false);
-            } else {
-              //if theres value in ref
-              if (element?.children) {
-                //if children
-                if (
-                  element?.children.find((i) => {
-                    return i === element?.data;
-                  })
-                ) {
-                  ref.style.borderColor = "";
-                  validityChecked[index] = true;
-                } else {
-                  ref.style.borderColor = "red";
-                  validityChecked[index] = false;
-                  setFeedback("Invalid value detected");
-                }
-              } else {
-                //if no children
-                if (element?.validCondintion) {
-                  //if phone number
-                  if (element?.input?.type?.toLowerCase()?.includes("tel")) {
-                    //if no local storage value
-                    if (
-                      (localStorage?.getItem(`${element?.label}`) !== null &&
-                        isValidPhoneNumber(
-                          parsePhoneNumber(
-                            ref?.value?.toString(),
-                            localStorage?.getItem(`${element?.label}`)
-                          )?.number
-                        )) ||
-                      isValidPhoneNumber(ref?.value)
-                    ) {
-                      setformData((p) => {
-                        p.find((item) => {
-                          return (
-                            item?.label?.toLowerCase() ===
-                            ref?.name?.toLowerCase()
-                          );
-                        }).data = parsePhoneNumber(
-                          ref.value,
-                          localStorage?.getItem(`${element?.label}`)
-                        )?.number;
-                        return [...p];
-                      });
-                      validityChecked[index] = true;
-                      setBools((p) => {
-                        return { ...p, invalidPhone: false };
-                      });
-                    } else {
-                      setFeedback(
-                        "Please select country and enter valid phone numner"
+        //for files
+        if (element?.input?.type === "file") {
+          setFileFxnRefs?.current?.find((Ref, i) => {
+            if (
+              Ref?.uploadFileInputRef?.name?.toLowerCase()?.trim() ===
+              element?.label?.toLowerCase()?.trim()
+            ) {
+              if (
+                Ref?.uploadFileInputRef?.files?.length > 0 &&
+                element?.data !== ""
+              ) {
+                validityChecked[index] = true;
+              } else if (
+                Ref?.uploadFileInputRef?.files?.length <= 0 ||
+                element?.data === ""
+              ) {
+                validityChecked[index] = false;
+                setFeedback("Please upload an image.");
+                // since JS is Async by default and this process takes much time, this process run last.
+                //hence the need to check and set feedback of first process
+                RequiredRefs?.current?.forEach((e, i) => {
+                  if (
+                    formData?.find((ele) => {
+                      return (
+                        ele?.label?.toLowerCase()?.trim() ===
+                        e?.name?.toLowerCase()?.trim()
                       );
-                      validityChecked[index] = false;
-                      setBools((p) => {
-                        return { ...p, invalidPhone: true };
-                      });
+                    })?.data === "" &&
+                    e.value === ""
+                  ) {
+                    setFeedback("Please enter all required fields");
+                  }
+                  if (e.value !== "" && validityChecked[i] === false) {
+                    setFeedback("Invalid value detected");
+                  }
+                });
+              }
+            }
+          });
+        } else {
+          //if not files
+          let ref = RequiredRefs.current?.find((ref) => {
+            return ref?.name?.toLowerCase() === element?.label?.toLowerCase();
+          });
+
+          if (ref !== null && ref !== undefined) {
+            if (element.input?.required) {
+              if (!ref?.value) {
+                ref.style.borderColor = "red";
+                setFeedback("Please enter all required fields.");
+                setBools((p) => {
+                  return { ...p, invalidPhone: true };
+                });
+                return (validityChecked[index] = false);
+              } else {
+                //if theres value in ref
+                if (element?.children) {
+                  //if children
+                  if (
+                    element?.children.find((i) => {
+                      return i === element?.data;
+                    })
+                  ) {
+                    ref.style.borderColor = "";
+                    validityChecked[index] = true;
+                  } else {
+                    ref.style.borderColor = "red";
+                    validityChecked[index] = false;
+                    setFeedback("Invalid value detected");
+                  }
+                } else {
+                  //if no children
+
+                  if (element?.validCondintion) {
+                    //if phone number
+                    if (element?.input?.type?.toLowerCase()?.includes("tel")) {
+                      //if no local storage value
+                      if (
+                        (localStorage?.getItem(`${element?.label}`) !== null &&
+                          isValidPhoneNumber(
+                            parsePhoneNumber(
+                              ref?.value?.toString(),
+                              localStorage?.getItem(`${element?.label}`)
+                            )?.number
+                          )) ||
+                        isValidPhoneNumber(ref?.value)
+                      ) {
+                        setformData((p) => {
+                          p.find((item) => {
+                            return (
+                              item?.label?.toLowerCase() ===
+                              ref?.name?.toLowerCase()
+                            );
+                          }).data = parsePhoneNumber(
+                            ref.value,
+                            localStorage?.getItem(`${element?.label}`)
+                          )?.number;
+                          return [...p];
+                        });
+                        validityChecked[index] = true;
+                        setBools((p) => {
+                          return { ...p, invalidPhone: false };
+                        });
+                      } else {
+                        setFeedback(
+                          "Please select country and enter valid phone numner"
+                        );
+                        validityChecked[index] = false;
+                        setBools((p) => {
+                          return { ...p, invalidPhone: true };
+                        });
+                      }
+                    } else {
+                      //any other input element
+                      if (element?.validCondintion(ref?.value)) {
+                        ref.style.borderColor = "";
+
+                        setformData((p) => {
+                          p.find((item) => {
+                            return (
+                              item?.label?.toLowerCase() ===
+                              ref?.name?.toLowerCase()
+                            );
+                          }).data = ref.value;
+                          return [...p];
+                        });
+
+                        validityChecked[index] = true;
+                      } else {
+                        ref.style.borderColor = "red";
+                        setFeedback("Invalid value detected");
+                        validityChecked[index] = false;
+                      }
                     }
                   } else {
-                    //any other input element
-                    if (element?.validCondintion(ref?.value)) {
-                      ref.style.borderColor = "";
+                    //if no valid condition function
+                    ref.style.borderColor = "";
+                    setformData((p) => {
+                      p.find((item) => {
+                        return (
+                          item?.label?.toLowerCase() ===
+                          ref?.name?.toLowerCase()
+                        );
+                      }).data = ref.value;
+                      return [...p];
+                    });
 
-                      setformData((p) => {
-                        p.find((item) => {
-                          return (
-                            item?.label?.toLowerCase() ===
-                            ref?.name?.toLowerCase()
-                          );
-                        }).data = ref.value;
-                        return [...p];
-                      });
+                    validityChecked[index] = true;
+                  }
+                }
+              }
+            } else {
+              ref.style.borderColor = "";
+              //if not required
+              if (ref?.value) {
+                if (element?.validCondintion) {
+                  if (element.validCondintion(ref?.value)) {
+                    //if no valid condition function
+                    ref.style.borderColor = "";
+                    validityChecked[index] = true;
 
-                      validityChecked[index] = true;
-                    } else {
-                      ref.style.borderColor = "red";
-                      setFeedback("Invalid value detected");
-                      validityChecked[index] = false;
-                    }
+                    setformData((p) => {
+                      p.find((item) => {
+                        return (
+                          item?.label?.toLowerCase() ===
+                          ref?.name?.toLowerCase()
+                        );
+                      }).data = ref.value;
+                      return [...p];
+                    });
+                  } else {
+                    ref.style.borderColor = "red";
+                    validityChecked[index] = false;
+                    setFeedback("Invalid value detected");
                   }
                 } else {
                   //if no valid condition function
                   ref.style.borderColor = "";
-                  setformData((p) => {
-                    p.find((item) => {
-                      return (
-                        item?.label?.toLowerCase() === ref?.name?.toLowerCase()
-                      );
-                    }).data = ref.value;
-                    return [...p];
-                  });
-
-                  validityChecked[index] = true;
-                }
-              }
-            }
-          } else {
-            ref.style.borderColor = "";
-            //if not required
-            if (ref?.value) {
-              if (element?.validCondintion) {
-                if (element.validCondintion(ref?.value)) {
-                  //if no valid condition function
-                  ref.style.borderColor = "";
                   validityChecked[index] = true;
 
                   setformData((p) => {
@@ -263,24 +343,7 @@ const Form = forwardRef(
                     }).data = ref.value;
                     return [...p];
                   });
-                } else {
-                  ref.style.borderColor = "red";
-                  validityChecked[index] = false;
-                  setFeedback("Invalid value detected");
                 }
-              } else {
-                //if no valid condition function
-                ref.style.borderColor = "";
-                validityChecked[index] = true;
-
-                setformData((p) => {
-                  p.find((item) => {
-                    return (
-                      item?.label?.toLowerCase() === ref?.name?.toLowerCase()
-                    );
-                  }).data = ref.value;
-                  return [...p];
-                });
               }
             }
           }
@@ -292,27 +355,20 @@ const Form = forwardRef(
           return element === true;
         })
       ) {
-        let obj = {};
         RequiredRefs?.current.forEach((i) => {
-          obj[replaceWhiteSpaceWithDash(i?.name)] = i.value;
-          setValidatedData_FromForm((p) => {
-            return { ...p, ...obj };
-          });
+          validatedData.current[replaceWhiteSpaceWithDash(i?.name)] = i.value;
         });
 
         formData?.forEach((i) => {
           if (i?.data instanceof Object) {
-            obj[replaceWhiteSpaceWithDash(i?.label?.toLowerCase()?.trim())] =
-              i.data;
-            setValidatedData_FromForm((p) => {
-              return { ...p, ...obj };
-            });
+            validatedData.current[
+              replaceWhiteSpaceWithDash(i?.label?.toLowerCase()?.trim())
+            ] = i.data;
           }
         });
 
-        //console.log(obj);
         if (onSubmit) {
-          onSubmit(obj);
+          onSubmit(validatedData.current);
         }
         if (content?.next) {
           setCurrentContent(content?.next);
@@ -325,7 +381,9 @@ const Form = forwardRef(
         RequiredRefs.current?.find((element) => {
           return element.value?.length > 0;
         }) ||
-        file
+        formData?.find((element) => {
+          return element?.data !== "";
+        })
       ) {
         if (content?.previous) {
           //if there is previous
@@ -350,7 +408,11 @@ const Form = forwardRef(
       }
     };
 
-    const cancelOperation = () => {
+    const clearInputs = () => {
+      RequiredRefs?.current?.forEach((element) => {
+        element.value = "";
+      });
+
       selectedValueFxnRefs?.current?.forEach((element) => {
         element?.setSelectedValue("");
       });
@@ -359,6 +421,12 @@ const Form = forwardRef(
         element?.setRadioValue("");
       });
 
+      setFileFxnRefs?.current?.forEach((Ref) => {
+        Ref?.setFile("");
+      });
+    };
+
+    const cancelOperation = () => {
       if (content?.previous) {
         //if there is previous
         formData?.forEach((item) => {
@@ -372,15 +440,7 @@ const Form = forwardRef(
         setCurrentContent(content?.previous);
       } else {
         //if no previous
-
-        //if file
-        if (file) {
-          setFile("");
-        }
-
-        formData?.forEach((item) => {
-          item.data = "";
-        });
+        clearInputs();
 
         if (formDataSetterFunctions?.length > 0) {
           formDataSetterFunctions.forEach((setterFunction) => {
@@ -393,8 +453,6 @@ const Form = forwardRef(
             });
           });
         }
-
-        setValidatedData_FromForm({});
 
         RequiredRefs?.current?.forEach((element) => {
           element.value = "";
@@ -411,8 +469,31 @@ const Form = forwardRef(
           return { ...p, showCancelModal: false };
         });
       }
+
+      if (onCancel) {
+        onCancel();
+      }
     };
 
+    //fileupload fxn passed to UploadFile component
+    const onFileUpload = (files) => {
+      setformData((p) => {
+        p.find((ele) => {
+          return (
+            ele?.label?.toLowerCase() ===
+            setFileFxnRefs?.current
+              ?.find((i) => {
+                return (
+                  i?.uploadFileInputRef?.name?.toLowerCase() ===
+                  ele?.label?.toLowerCase()
+                );
+              })
+              ?.uploadFileInputRef?.name?.toLowerCase()
+          );
+        }).data = files[0];
+        return [...p];
+      });
+    };
     return (
       <>
         {bools?.showCancelModal && (
@@ -443,7 +524,7 @@ const Form = forwardRef(
                   {formData?.length > 0 &&
                     formData.map((element, index) => {
                       return (
-                        !element?.notShow && (
+                        element?.input?.type !== "file" && (
                           <tr key={index}>
                             <td style={Styles?.row}>
                               <div style={Styles?.label}>
@@ -546,16 +627,23 @@ const Form = forwardRef(
                 />
               </div>
             </form>
-            {fileInclusive && (
-              <div className="relative h-fit top-10">
-                <UploadFile
-                  file={file}
-                  setFile={setFile}
-                  fallbackIcon={FaUser}
-                  allowedExtensions={fileInclusive?.allowedExtensions}
-                />
-              </div>
-            )}
+            {formData.map((element, index) => {
+              const Icon = element?.input?.icon;
+              return (
+                element?.input?.type === "file" && (
+                  <div className="relative h-fit top-10" key={index}>
+                    <UploadFile
+                      ref={addToSetFileFxnRefs}
+                      onUpload={onFileUpload}
+                      refValue={addToRequiredRefs}
+                      fallbackIcon={Icon}
+                      alt={element?.label}
+                      allowedExtensions={element?.input?.allowedExtensions}
+                    />
+                  </div>
+                )
+              );
+            })}
           </section>
         </main>
       </>
@@ -642,7 +730,7 @@ const PhoneNumber = forwardRef(({ element, addToRequiredRefs, bools }, ref) => {
         localStorage.setItem(`${element?.label}`, countryCode);
       }
     }
-  }, [countryCode]);
+  }, [countryCode, element?.label]);
 
   return (
     <div

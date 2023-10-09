@@ -1,8 +1,12 @@
-export const removeArrayItem = (array, arrayItem) => {
-  let beforeElement = array.slice(0, array.indexOf(arrayItem));
+export const removeArrayItem = (array, index, numberOfItemstoBeRemoved) => {
+  let beforeElement = array.slice(0, index + 1 - numberOfItemstoBeRemoved);
 
-  let afterElement = array.slice(array.indexOf(arrayItem) + 1, array.length);
-  if (arrayItem) {
+  let afterElement = array.slice(
+    index + 1 - numberOfItemstoBeRemoved + 1,
+    array.length
+  );
+
+  if (array && index && numberOfItemstoBeRemoved) {
     return [...beforeElement, ...afterElement];
   } else {
     return [...array];

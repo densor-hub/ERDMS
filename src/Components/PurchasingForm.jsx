@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { flushSync } from "react-dom";
 import {
   isValidDate,
   convertMonthTo_ALPHABETS,
@@ -240,12 +239,15 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
         purchaseDetails.specificPurchase = purcahseType.packs;
       }
     }
-
     setBools((p) => {
       return {
         ...p,
         showSwitchPurchaseTypeModal: false,
       };
+    });
+
+    setPurcahseDetails((p) => {
+      return { ...p, ALLitemsSelected: [], detailsExpanded: [] };
     });
   };
 
@@ -423,208 +425,6 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
     }
   };
 
-  // const AddItem = (e) => {
-  //   e.preventDefault();
-
-  //   if (
-  //     RequiredRefs?.current?.find((el) => {
-  //       return el.value === "" || el.value === null;
-  //     })
-  //   ) {
-  //     RequiredRefs?.current?.forEach((el) => {
-  //       if (el.value === "" || el.value === null) {
-  //         return (el.style.borderColor = `${colors.errorColor}`);
-  //       }
-  //     });
-  //     setFeedback("Enter all required fields");
-  //   } else {
-  //     if (
-  //       purchaseDetails.ALLitemsPaidFor.find((item) => {
-  //         return item.id === purchaseDetails.item.id;
-  //       })
-  //     ) {
-  //       RequiredRefs.current.find((element) => {
-  //         return element.name === "itemname";
-  //       }).style.borderColor = `${colors.errorColor}`;
-  //       setFeedback("Item already selected");
-  //     } else {
-  //       RequiredRefs?.current?.forEach((element) => {
-  //         if (!element?.value) {
-  //           element.style.borderColor = `${colors?.errorColor}`;
-  //         } else {
-  //           element.style.borderColor = `${colors?.defaultColor}`;
-  //         }
-
-  //         if (element.name === "itemname") {
-  //           if (
-  //             dataFromAPI?.fetchItemsResults?.find((item) => {
-  //               return (
-  //                 item?.id === purchaseDetails.item?.id &&
-  //                 `${item?.name} ${item?.sizeOrType}`.toLowerCase() ===
-  //                   element?.value?.toLowerCase()
-  //               );
-  //             })
-  //           ) {
-  //             element.style.borderColor = `${colors?.defaultColor}`;
-  //           } else {
-  //             setFeedback("Plase select valid item");
-  //             element.style.borderColor = `${colors?.errorColor}`;
-  //           }
-  //         }
-
-  //         if (element?.name === "quantity") {
-  //           VerifyNumericalInputValue(purchaseDetails.quantity, element, true);
-  //         }
-
-  //         if (element?.name === "piecesInPack") {
-  //           VerifyNumericalInputValue(
-  //             purchaseDetails?.piecesInPack,
-  //             element,
-  //             true
-  //           );
-  //         }
-
-  //         if (element?.name === "cost") {
-  //           VerifyNumericalInputValue(
-  //             purchaseDetails.purchasePrice,
-  //             element,
-  //             true
-  //           );
-  //         }
-
-  //         if (element?.name === "piecesInPacks") {
-  //           if (purchaseDetails?.specificPurchase === purcahseType.packs) {
-  //             VerifyNumericalInputValue(
-  //               purchaseDetails.piecesInPack,
-  //               element,
-  //               true
-  //             );
-  //           }
-  //         }
-
-  //         if (
-  //           element?.name === "supplier" &&
-  //           purchaseDetails?.ALLitemsPaidFor.length === 0
-  //         ) {
-  //           if (
-  //             dataFromAPI.fetchSuppliersResults?.find((supplier) => {
-  //               return (
-  //                 supplier?.id === purchaseDetails?.Supplier?.id &&
-  //                 element.value.toLowerCase().trim() ===
-  //                   supplier.name?.toLowerCase().trim()
-  //               );
-  //             })
-  //           ) {
-  //             setBools((p) => {
-  //               return { ...p, supplierAlreadySet: true };
-  //             });
-  //             element.style.borderColor = `${colors?.defaultColor}`;
-  //           } else {
-  //             setFeedback("Please select valid supplier");
-  //             element.style.borderColor = `${colors?.errorColor}`;
-  //           }
-  //         }
-
-  //         if (
-  //           element.name === "date" &&
-  //           purchaseDetails?.ALLitemsPaidFor.length === 0
-  //         ) {
-  //           if (isValidDate(element.value)) {
-  //             setBools((p) => {
-  //               return { ...p, dateAlreadySet: true };
-  //             });
-  //             element.style.borderColor = `${colors?.defaultColor}`;
-  //           } else {
-  //             element.style.borderColor = `${colors?.errorColor}`;
-  //           }
-  //         }
-  //       });
-
-  //       //Not required values
-  //       Not_RequiredRefs?.current?.forEach((element) => {
-  //         if (element?.name === "addons") {
-  //           VerifyNumericalInputValue(purchaseDetails.addOns, element, false);
-  //         }
-
-  //         if (element?.name === "discount") {
-  //           VerifyNumericalInputValue(purchaseDetails.discount, element, false);
-  //         }
-  //         if (element?.name === "VAT") {
-  //           VerifyNumericalInputValue(purchaseDetails.VAT, element, false);
-  //         }
-  //       });
-
-  //       if (
-  //         dataFromAPI?.fetchItemsResults?.find((item) => {
-  //           return (
-  //             item?.id === purchaseDetails.item?.id &&
-  //             `${item?.name} ${item?.sizeOrType}`.toLowerCase() ===
-  //               RequiredRefs.current
-  //                 ?.find((e) => {
-  //                   return e.name === "itemname";
-  //                 })
-  //                 ?.value?.toLowerCase()
-  //           );
-  //         }) &&
-  //         dataFromAPI.fetchSuppliersResults?.find((supplier) => {
-  //           return (
-  //             supplier.id === purchaseDetails.Supplier?.id &&
-  //             supplier?.name?.toLowerCase().trim() ===
-  //               purchaseDetails?.Supplier?.name?.toLowerCase().trim()
-  //           );
-  //         }) &&
-  //         purchaseDetails?.quantity &&
-  //         purchaseDetails?.quantity > 0 &&
-  //         purchaseDetails?.purchasePrice &&
-  //         purchaseDetails?.purchasePrice > 0 &&
-  //         (!purchaseDetails?.addOns ||
-  //           (purchaseDetails?.addOns && purchaseDetails?.addOns > 0)) &&
-  //         (!purchaseDetails?.discount ||
-  //           (purchaseDetails?.discount && purchaseDetails?.discount > 0)) &&
-  //         (!purchaseDetails?.VAT ||
-  //           (purchaseDetails?.VAT && purchaseDetails?.VAT > 0)) &&
-  //         ((purchaseDetails?.specificPurchase === purcahseType.packs &&
-  //           purchaseDetails?.piecesInPack &&
-  //           purchaseDetails?.piecesInPack > 0) ||
-  //           (purchaseDetails?.specificPurchase === purcahseType.pieces &&
-  //             !purchaseDetails?.piecesInPack))
-  //       ) {
-  //         const CalculateTotalCost = parseFloat(
-  //           Number(purchaseDetails.totalCost) +
-  //             (Number(purchaseDetails.quantity) *
-  //               Number(purchaseDetails.purchasePrice) -
-  //               Number(purchaseDetails.quantity) *
-  //                 Number(purchaseDetails.discount)) +
-  //             Number(purchaseDetails.quantity) * Number(purchaseDetails)
-  //         ).toFixed(2);
-  //         setPurcahseDetails((p) => {
-  //           return {
-  //             ...p,
-  //             ALLitemsPaidFor: [...purchaseDetails.ALLitemsPaidFor, itemObject],
-  //             item: {},
-  //             quantity: "",
-  //             cost: "",
-  //             addOns: "",
-  //             discount: "",
-  //             VAT: "",
-  //             piecesInPack: "",
-  //             totalCost: CalculateTotalCost,
-  //           };
-  //         });
-  //         RequiredRefs.current?.forEach((e) => {
-  //           return (e.value = null);
-  //         });
-  //         Not_RequiredRefs.current?.forEach((e) => {
-  //           return (e.value = null);
-  //         });
-  //         setFeedback("Item added successfully");
-  //       }
-  //     }
-  //   }
-  // };
-
-  //remove error messages after 3 seconds
-
   const stopActionForModal = () => {
     setBools((p) => {
       return {
@@ -636,8 +436,54 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
   };
 
   const onFormCancel = () => {
+    //clear AllItemsSelected and clear detailsExpanded
     setPurcahseDetails((p) => {
-      return { ...p, ALLitemsSelected: [] };
+      return { ...p, ALLitemsSelected: [], detailsExpanded: [] };
+    });
+
+    //insert Supplier and Date back into the form
+    setPiecesformData((p) => {
+      p.forEach((item) => {
+        item.data = "";
+      });
+      return [
+        ...p,
+        {
+          label: "Supplier",
+          data: "",
+          input: {
+            type: "select",
+            required: true,
+            autoComplete: "off",
+            placeholder: "Select Supplier",
+          },
+          validCondintion: (itemanme) => {
+            if (itemanme.length > 0) {
+              return true;
+            } else {
+              return false;
+            }
+          },
+          children: dataFromAPI?.fetchSuppliersResults,
+        },
+        {
+          label: "Date",
+          data: "",
+          input: {
+            type: "date",
+            required: true,
+            autoComplete: "off",
+            placeholder: "Select Supplier",
+          },
+          validCondintion: (itemanme) => {
+            if (itemanme.length > 0) {
+              return true;
+            } else {
+              return false;
+            }
+          },
+        },
+      ];
     });
   };
   const OnFormSubmit = (ValidatedData_FromForm) => {
@@ -689,6 +535,19 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
           ALLitemsSelected: [...p.ALLitemsSelected, itemObject],
         };
       });
+
+      //remove supplier  and date from form data
+      setPiecesformData((p) => {
+        return p.slice(
+          0,
+          p.indexOf(
+            p.find((item) => {
+              return item.label?.toLowerCase()?.trim() === "supplier";
+            })
+          )
+        );
+      });
+
       setFeedback("Added successfully.");
       formRef.current?.clearInputs();
     } else {
@@ -762,12 +621,15 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
                       setPiecesformData((p) => {
                         return removeArrayItem(
                           p,
-                          p.find((element) => {
-                            return (
-                              element.label?.toLowerCase() ===
-                              "Pcs in Packs"?.toLowerCase()
-                            );
-                          })
+                          p.indexOf(
+                            p.find((element) => {
+                              return (
+                                element.label?.toLowerCase() ===
+                                "Pcs in Packs"?.toLowerCase()
+                              );
+                            })
+                          ),
+                          1
                         );
                       });
                     }
@@ -955,25 +817,15 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
                           btnColor: "red",
                           action: (id) => {
                             if (
-                              purchaseDetails.detailsExpanded?.find((ID) => {
-                                return ID === id;
-                              })
+                              purchaseDetails?.ALLitemsSelected?.length === 1
                             ) {
+                              //onFormCancel empties allItemsSelected and detailsOpened
+                              //onFormCancel also sets supplier and data back into form
+                              onFormCancel();
                               setPurcahseDetails((p) => {
                                 return {
                                   ...p,
-                                  detailsExpanded:
-                                    purchaseDetails.detailsExpanded?.filter(
-                                      (ID) => {
-                                        return ID !== id;
-                                      }
-                                    ),
-                                  ALLitemsPaidFor:
-                                    purchaseDetails?.ALLitemsPaidFor?.filter(
-                                      (element) => {
-                                        return element?.id !== id;
-                                      }
-                                    ),
+                                  ALLitemsSelected: [],
                                 };
                               });
                             } else {

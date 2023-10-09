@@ -18,7 +18,9 @@ const AddPersonForm = ({ content, navigation, formDataSetterFunctions }) => {
     });
   };
 
-  console.log(finalEMploymentData);
+  const cancelEmployment = () => {
+    setFinalEmploymentData({});
+  };
   return (
     <main className="w-full ">
       <ProgresBar
@@ -42,13 +44,13 @@ const AddPersonForm = ({ content, navigation, formDataSetterFunctions }) => {
                 formDataSetterFunctions={formDataSetterFunctions?.current}
                 content={contents?.navigation}
                 setCurrentContent={setCurrentContent}
-                fileInclusive={contents?.fileInclusive}
                 endPointUrl={contents?.endPointUrl}
                 Styles={{
                   input: { width: "300px" },
                   label: { fontWeight: "450" },
                 }}
                 onSubmit={onDetailsSubmit}
+                onCancel={cancelEmployment}
               />
             )
           );

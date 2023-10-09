@@ -63,6 +63,17 @@ const AddEmployee = () => {
       },
       children: ["Male", "Female"],
     },
+    {
+      label: "image",
+      data: "",
+      input: {
+        type: "file",
+        required: true,
+        autoComplete: "off",
+        allowedExtensions: ["png", "jpg", "jpeg", "webp"],
+        icon: FaUser,
+      },
+    },
   ]);
 
   const [contactDetails, setContactDetails] = useState([
@@ -185,10 +196,6 @@ const AddEmployee = () => {
       navigation: {
         next: navigation?.current?.contactDetails,
         default: navigation?.current?.generalDetails,
-      },
-      fileInclusive: {
-        allowedExtensions: ["png", "jpg", "jpeg", "webp"],
-        fileIcon: FaUser,
       },
     },
     {

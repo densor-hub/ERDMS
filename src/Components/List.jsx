@@ -36,6 +36,22 @@ const List = ({
   return (
     <main className="border-l-2 w-full h-full relative">
       <section>
+        {Columns?.data[0] && (
+          <div className="border-b-2 h-[50px]  relative  bg-white  ">
+            <div className="relative h-full  flex justify-between ">
+              <div className="">
+                <span>Total Cost </span>
+                {"-- "}
+                <span className="text-xl font-bold">
+                  GHS {parseFloat(CalculateTotalCost())?.toLocaleString()}
+                </span>
+              </div>
+              <button className="px-2 hover:bg-slate-700 text-white bg-slate-600">
+                Submit
+              </button>
+            </div>
+          </div>
+        )}
         {Columns?.data[0] &&
           (Date?.title?.length > 0 || Date?.data?.length > 0) && (
             <div className="text-sm text-center h-[15px]">
@@ -85,7 +101,7 @@ const List = ({
           </div>
         )}
 
-        <section className="h-[calc(100vh-170px)] min-h-[319px] w-full overflow-y-scroll">
+        <section className="h-[calc(100vh-185px)] min-h-[350px] w-full overflow-y-scroll">
           {Columns?.data &&
             Columns?.data?.length > 0 &&
             Columns?.data?.map((item, index) => {
@@ -102,22 +118,6 @@ const List = ({
               );
             })}
         </section>
-        {Columns?.data[0] && (
-          <div className="border-2 h-[50px]  relative  bg-white  ">
-            <div className="relative h-full  flex justify-between ">
-              <div className="">
-                <span>Total Cost </span>
-                {"-- "}
-                <span className="text-xl font-bold">
-                  GHS {parseFloat(CalculateTotalCost())?.toLocaleString()}
-                </span>
-              </div>
-              <button className="px-2 hover:bg-slate-700 text-white bg-slate-600">
-                Submit
-              </button>
-            </div>
-          </div>
-        )}
       </section>
     </main>
   );

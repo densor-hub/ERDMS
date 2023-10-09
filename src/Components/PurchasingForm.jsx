@@ -703,7 +703,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
               <div className="leftside w-full h-full">
                 <div className=" w-full flex h-full">
                   <div className="formsContainer p-2 border-r-2">
-                    <h4 className="text-center text-lg">
+                    <h4 className="text-center text-lg relative top-6">
                       {TypeOfPurchase}
                       <span style={{ color: colors.errorColor }}>
                         <i>{` ${purchaseDetails.specificPurchase}`} </i>

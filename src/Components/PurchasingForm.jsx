@@ -441,50 +441,63 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
       return { ...p, ALLitemsSelected: [], detailsExpanded: [] };
     });
 
-    //insert Supplier and Date back into the form
-    setPiecesformData((p) => {
-      p.forEach((item) => {
-        item.data = "";
+    //insert Supplier and Date back into the form thus if item and supplier are not in the form already.
+    if (
+      PiecesformData?.find((element) => {
+        return element?.label?.trim()?.toLowerCase() === "supplier";
+      })
+    ) {
+      setPiecesformData((p) => {
+        p?.forEach((item) => {
+          item.data = "";
+        });
+        return [...p];
       });
-      return [
-        ...p,
-        {
-          label: "Supplier",
-          data: "",
-          input: {
-            type: "select",
-            required: true,
-            autoComplete: "off",
-            placeholder: "Select Supplier",
+    } else {
+      setPiecesformData((p) => {
+        p.forEach((item) => {
+          item.data = "";
+        });
+        return [
+          ...p,
+          {
+            label: "Supplier",
+            data: "",
+            input: {
+              type: "select",
+              required: true,
+              autoComplete: "off",
+              placeholder: "Select Supplier",
+            },
+            validCondintion: (itemanme) => {
+              if (itemanme.length > 0) {
+                return true;
+              } else {
+                return false;
+              }
+            },
+            children: dataFromAPI?.fetchSuppliersResults,
           },
-          validCondintion: (itemanme) => {
-            if (itemanme.length > 0) {
-              return true;
-            } else {
-              return false;
-            }
+          {
+            label: "Date",
+            data: "",
+            input: {
+              type: "date",
+              required: true,
+              autoComplete: "off",
+              placeholder: "Select Supplier",
+            },
+            validCondintion: (itemanme) => {
+              if (itemanme.length > 0) {
+                return true;
+              } else {
+                return false;
+              }
+            },
           },
-          children: dataFromAPI?.fetchSuppliersResults,
-        },
-        {
-          label: "Date",
-          data: "",
-          input: {
-            type: "date",
-            required: true,
-            autoComplete: "off",
-            placeholder: "Select Supplier",
-          },
-          validCondintion: (itemanme) => {
-            if (itemanme.length > 0) {
-              return true;
-            } else {
-              return false;
-            }
-          },
-        },
-      ];
-    });
+        ];
+      });
+    }
   };
   const OnFormSubmit = (ValidatedData_FromForm) => {
     const itemObject = {

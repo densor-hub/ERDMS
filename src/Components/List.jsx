@@ -173,7 +173,7 @@ const IndividualRecord = ({
                         : "text-xs bg-slate-700 text-white px-1 ml-1 rounded-lg   hover:p-2"
                     }
                   >
-                    {e.title}
+                    {e?.title}
                   </button>
                 );
               })}

@@ -46,7 +46,7 @@ const AddPersonForm = ({ content, navigation, formDataSetterFunctions }) => {
                 setCurrentContent={setCurrentContent}
                 endPointUrl={contents?.endPointUrl}
                 Styles={{
-                  input: { width: "300px" },
+                  input: { marginBottom: "8px" },
                   label: { fontWeight: "450" },
                 }}
                 onSubmit={onDetailsSubmit}

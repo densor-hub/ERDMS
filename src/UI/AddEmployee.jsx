@@ -27,13 +27,12 @@ const AddEmployee = () => {
       },
     },
     {
-      label: "Gh ID",
+      label: "Ghana card number",
       data: "",
       input: {
         type: "text",
         required: true,
         autoComplete: "off",
-        placeholder: " Enter Ghana card no_",
       },
     },
     {
@@ -43,7 +42,6 @@ const AddEmployee = () => {
         type: "date",
         required: true,
         autoComplete: "off",
-        placeholder: " Enter type",
       },
       validCondintion: (dateofbith) => {
         if (isValidDate(dateofbith)) {
@@ -135,7 +133,7 @@ const AddEmployee = () => {
 
   const [employmentDetails, setEmploymentDetails] = useState([
     {
-      label: "Type",
+      label: "Employment type",
       data: "",
       input: {
         required: true,

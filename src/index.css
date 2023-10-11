@@ -9,6 +9,7 @@
   border: 2px solid #e2e8f0;
   border-radius: 10px;
   width: 100%;
+  outline: none;
 }
 
 .PhoneInput:focus {
@@ -20,6 +21,7 @@
   border-bottom: 0px;
   width: 100%;
   border: 0px;
+  outline: none;
 }
 .PhoneInput input:focus {
   border: 0px;

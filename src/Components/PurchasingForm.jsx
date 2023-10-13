@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  isValidDate,
-  convertMonthTo_ALPHABETS,
-} from "../Functions/DateFunctions";
+import { convertMonthTo_ALPHABETS } from "../Functions/DateFunctions.ts";
 import axios from "axios";
 import Modal from "./Modal";
 import List from "../Components/List";
@@ -13,7 +10,7 @@ import Form from "./Form";
 import {
   insertArrayItem,
   removeArrayItem,
-} from "../Functions/FormatArraysAndObjects";
+} from "../Functions/FormatArraysAndObjects.ts";
 
 const PurchaseForm = ({ TypeOfPurchase }) => {
   const ConvertNANtoZero = (data) => {

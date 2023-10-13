@@ -4,8 +4,8 @@ import AddPersonForm from "../Components/AddPersonForm";
 import PageRightSide from "../Components/PageRightSide";
 import { useState, useRef } from "react";
 import { FaUser } from "react-icons/fa";
-import { formatEmail, formatFullName } from "../Functions/FormatString";
-import { isValidDate } from "../Functions/DateFunctions";
+import { formatEmail, formatFullName } from "../Functions/FormatString.ts";
+import { isValidDate } from "../Functions/DateFunctions.ts";
 import { isValidPhoneNumber } from "react-phone-number-input";
 
 const AddEmployee = () => {

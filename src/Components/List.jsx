@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
-import { convertMonthTo_ALPHABETS } from "../Functions/DateFunctions";
+import { convertMonthTo_ALPHABETS } from "../Functions/DateFunctions.ts";
 
 const List = ({
   CompleteData,

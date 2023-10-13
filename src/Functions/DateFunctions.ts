@@ -1,12 +1,12 @@
 const durationValidator = (
-  startDate,
-  endDate,
-  startDateRef,
-  endDateRef,
-  setFeedback,
-  setFieldColor,
-  FuctionToRunWhenDurationIsValid,
-  selectedEmployeeId
+  startDate: Intl.DateTimeFormatPartTypes,
+  endDate: Intl.DateTimeFormatPartTypes,
+  startDateRef: React.RefObject<string>,
+  endDateRef: React.RefObject<string>,
+  setFeedback: Function,
+  setFieldColor: Function,
+  FuctionToRunWhenDurationIsValid: Function,
+  selectedEmployeeId: string | number
 ) => {
   let startYear = startDate.split("-")[0];
   let startMonth = startDate.split("-")[1];
@@ -44,8 +44,8 @@ const durationValidator = (
 
 export default durationValidator;
 
-export const equal_To_Or_Bigger_Than_Toadys_Date = (untrimedDate) => {
-  const date = untrimedDate?.trim();
+export const equal_To_Or_Bigger_Than_Toadys_Date = (untrimedDate: Date) => {
+  const date: string = untrimedDate?.toString()?.trim();
   if (date === null || date === undefined) {
     return false;
   } else {
@@ -57,7 +57,7 @@ export const equal_To_Or_Bigger_Than_Toadys_Date = (untrimedDate) => {
     let currentMonth = `${new Date().getMonth()}`;
     let currentDayOfTheMonth = `${new Date().getDate()}`;
 
-    if (!isValidDate(date)) {
+    if (!isValidDate(untrimedDate)) {
       return false;
     } else {
       //start comparing year
@@ -98,11 +98,11 @@ export const equal_To_Or_Bigger_Than_Toadys_Date = (untrimedDate) => {
   }
 };
 
-export const isValidDate = (untrimedDate) => {
-  const date = untrimedDate.trim();
-  let dateYear = date.split("-")[0];
-  let dateMonth = date.split("-")[1];
-  let dateDayOfTheMonth = date.split("-")[2];
+export const isValidDate = (untrimedDate: Date) => {
+  const date = untrimedDate?.toString()?.trim();
+  let dateYear: string = date.split("-")[0];
+  let dateMonth: number = Number(date.split("-")[1]);
+  let dateDayOfTheMonth: number = Number(date.split("-")[2]);
 
   if (
     !Number(dateYear) ||
@@ -123,7 +123,9 @@ export const isValidDate = (untrimedDate) => {
   }
 };
 
-export const convertMonthTo_ALPHABETS = (date) => {
+export const convertMonthTo_ALPHABETS = (
+  date: Intl.DateTimeFormatPartTypes
+) => {
   const months = [
     "Jan",
     "Feb",
@@ -146,8 +148,9 @@ export const convertMonthTo_ALPHABETS = (date) => {
   }
 };
 
-export const convertMonthTo_NUMBERS = (date) => {
-  let newDate;
+export const convertMonthTo_NUMBERS = (date: Date) => {
+  var passedDate: string = date.toString()?.trim();
+  let newDate: string = "";
   const months = [
     "Jan",
     "Feb",
@@ -163,8 +166,11 @@ export const convertMonthTo_NUMBERS = (date) => {
     "Dec",
   ];
   for (var i = 0; i <= months.length; i++) {
-    if (months[i] === date.split("-")[1]) {
-      newDate = date.replace(date.split("-")[1], i + 1);
+    if (months[i] === passedDate.split("-")[1]) {
+      newDate = passedDate.replace(
+        passedDate.split("-")[1],
+        Number(i + 1).toString()
+      );
     }
   }
 

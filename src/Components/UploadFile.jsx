@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Button from "./Button";
 
 const UploadFile = forwardRef(
   ({ allowedExtensions, fallbackIcon, alt, onUpload }, ref) => {
@@ -64,15 +65,17 @@ const UploadFile = forwardRef(
           </div>
         </section>
 
-        <button
-          className="rounded-lg px-4 text-white bg-slate-600 hover:bg-slate-700"
+        <Button
+          label={"Upload"}
           onClick={(e) => {
             e.preventDefault();
             uploadFileInputRef?.current?.click();
           }}
-        >
-          Upload
-        </button>
+          style={{
+            fontSize: "small",
+            padding: "1px 5px",
+          }}
+        ></Button>
         <input
           ref={uploadFileInputRef}
           onClick={(e) => {

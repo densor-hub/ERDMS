@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
-import { createPathname } from "../Functions/FormatString";
+import { createPathname } from "../Functions/FormatString.ts";
 
-const MenuContent = ({ currentContent }) => {
+const MenuGrandChildren = ({ currentContent }) => {
   //current content from Menu in UI
   return (
     currentContent?.content?.length > 0 && (
       <main className="bg-slate-600 min-h-[560px] h-full">
-        <div className="pt-11 ">
+        <div className="pt-11">
           {currentContent?.content?.length > 0 &&
             currentContent?.content.map((element, index) => {
               return (
@@ -16,7 +16,7 @@ const MenuContent = ({ currentContent }) => {
                   key={index}
                   className={index === 0 ? "border-t-4 border-slate-300" : {}}
                 >
-                  <MenuContentBody element={element} />
+                  <MenuGrandChildrenBody element={element} />
                 </div>
               );
             })}
@@ -26,13 +26,13 @@ const MenuContent = ({ currentContent }) => {
   );
 };
 
-export default MenuContent;
+export default MenuGrandChildren;
 
-const MenuContentBody = ({ element }) => {
+const MenuGrandChildrenBody = ({ element }) => {
   const [showChildren, setShowChildren] = useState(false);
 
   return (
-    <div className="text-white  text-left w-full ] ">
+    <div className="text-white  text-left w-full  ">
       {element?.children ? (
         <section className="w-full">
           <div className="h-12  flex items-center">
@@ -50,8 +50,8 @@ const MenuContentBody = ({ element }) => {
                 <span
                   className={
                     showChildren
-                      ? "rotate-90 relative right-2 transition-transform "
-                      : "rotate-360 relative right-2 transition-transform "
+                      ? "rotate-90 relative right-2 transition-transform duration-600"
+                      : "rotate-360 relative right-2 transition-transform duration-300"
                   }
                 >
                   <AiOutlineRight color={"white"} />
@@ -60,21 +60,31 @@ const MenuContentBody = ({ element }) => {
               </span>
             </button>
           </div>
-          <section className="bg-slate-400 text-zinc-700 ">
-            {showChildren &&
-              element.children.map((childrenElement, index) => {
-                return (
-                  <div key={index} className="w-full h-7  hover:text-white">
-                    <Link
-                      to={`/${createPathname(childrenElement?.title)}`}
-                      className="relative left-16 "
-                    >
-                      {childrenElement?.title}
-                    </Link>
-                  </div>
-                );
-              })}
-          </section>
+
+          <div
+            className={
+              showChildren
+                ? "relative bottom-5 translate-y-5 transition-transform duration-500"
+                : ""
+            }
+          >
+            {showChildren && (
+              <section className="bg-slate-400 text-zinc-700 ">
+                {element.children.map((childrenElement, index) => {
+                  return (
+                    <div key={index} className="w-full h-7  ">
+                      <Link
+                        to={`/${createPathname(childrenElement?.title)}`}
+                        className="relative left-16 "
+                      >
+                        {childrenElement?.title}
+                      </Link>
+                    </div>
+                  );
+                })}
+              </section>
+            )}
+          </div>
         </section>
       ) : (
         <div className="h-12 flex items-center ">

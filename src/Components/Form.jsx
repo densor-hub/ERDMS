@@ -1,15 +1,14 @@
 import { useState, useRef, useImperativeHandle } from "react";
-import PhoneInput, {
-  isValidPhoneNumber,
-  parsePhoneNumber,
-} from "react-phone-number-input";
+import { isValidPhoneNumber, parsePhoneNumber } from "react-phone-number-input";
 import { forwardRef } from "react";
 import { useEffect } from "react";
-import { replaceWhiteSpaceWithDash } from "../Functions/FormatString";
+import { replaceWhiteSpaceWithDash } from "../Functions/FormatString.ts";
 import UploadFile from "./UploadFile";
 import Modal from "./Modal";
 import Button from "./Button";
-import { useOutsideClicked } from "../Hooks/useOutSideClicked";
+import Select from "./Select";
+import Radio from "./Radio";
+import PhoneInput from "./PhoneInput";
 
 const Form = forwardRef(
   (
@@ -57,6 +56,10 @@ const Form = forwardRef(
     let validatedData = useRef({});
     const [feedback, setFeedback] = useState("");
 
+    const inputStyle = {
+      valid: "border-2  border-slate-200 rounded-lg w-full mb-2 ",
+      invlaid: "border-0 border-b-2 border-red-500 mb-2",
+    };
     const [bools, setBools] = useState({
       genderSelected: false,
       showCancelModal: false,
@@ -536,21 +539,96 @@ const Form = forwardRef(
                 formData.map((element, index) => {
                   return (
                     element?.input?.type !== "file" && (
-                      <FieldSet
-                        key={index}
-                        addToFielSetRefs={addToFielSetRefs}
-                        element={element}
-                        addToRequiredRefs={addToRequiredRefs}
-                        formData={formData}
-                        formType={formType}
-                        addToSelectedValueFxns={addToSelectedValueFxns}
-                        addToValididyPhoneNumberRefs={
-                          addToValididyPhoneNumberRefs
-                        }
-                        Styles={Styles}
-                        addTosetRadioFxnRefs={addTosetRadioFxnRefs}
-                        bools={bools}
-                      ></FieldSet>
+                      <fieldset
+                        className={inputStyle.valid}
+                        ref={addToFielSetRefs}
+                        style={Styles?.input}
+                      >
+                        {!formType?.regular && (
+                          <legend className="text-yellow-700 text-[12px]">
+                            {element?.label}{" "}
+                            <span className="text-xs relative top-[25%]">
+                              {element?.input?.required && (
+                                <i className="text-[11px] text-slate-400 relative bottom-[1px]">
+                                  required
+                                </i>
+                              )}
+                              <span style={{ visibility: "hidden" }}> *</span>
+                            </span>
+                          </legend>
+                        )}
+                        <label style={Styles?.row}>
+                          {formType?.regular && (
+                            <div
+                              className="transition-all relative"
+                              style={Styles?.label}
+                            >
+                              {element?.label}{" "}
+                              <span className="text-xs absolute right-0 top-[50%] translate-y-[-50%]">
+                                {element?.input?.required && " *"}
+                              </span>{" "}
+                            </div>
+                          )}
+
+                          {element?.input?.type === "text" ||
+                          element?.input?.type === "textarea" ||
+                          element?.input?.type === "email" ||
+                          element?.input?.type === "number" ||
+                          element?.input?.type === "date" ||
+                          element?.input?.type === "checkbox" ||
+                          element?.input?.type === "date-time" ? (
+                            <input
+                              style={{
+                                padding: "0px",
+                                margin: "0px",
+                                border: "0px",
+                                outline: "none",
+                                width: "calc(100% - 10px)",
+                                position: "relative",
+                                left: "5px",
+                              }}
+                              {...element?.input}
+                              id={element?.label?.toLowerCase()}
+                              placeholder={
+                                element?.input?.placeholder
+                                  ? ` ${element?.input?.placeholder}`
+                                  : ` ${element?.label?.trim()}`
+                              }
+                              name={element?.label.toLowerCase()}
+                              ref={addToRequiredRefs}
+                              onChange={element.onChange}
+                              defaultValue={element?.data}
+                              onFocus={() => {}}
+                            ></input>
+                          ) : element?.input?.type?.trim()?.toLowerCase() ===
+                            "select" ? (
+                            <Select
+                              ref={addToSelectedValueFxns}
+                              REF={addToRequiredRefs}
+                              selectData={element}
+                              formData={formData}
+                              Styles={Styles}
+                            />
+                          ) : element?.input?.type === "tel" ? (
+                            <PhoneInput
+                              phoneNumberData={element}
+                              REF={addToRequiredRefs}
+                              ref={addToValididyPhoneNumberRefs}
+                              Styles={Styles?.phoneNumber}
+                              bools={bools}
+                            />
+                          ) : element?.input?.type === "radio" ? (
+                            <Radio
+                              ref={addTosetRadioFxnRefs}
+                              radioData={element}
+                              REF={addToRequiredRefs}
+                              Styles={Styles}
+                            />
+                          ) : (
+                            ""
+                          )}
+                        </label>
+                      </fieldset>
                     )
                   );
                 })}
@@ -561,6 +639,11 @@ const Form = forwardRef(
                   onClick={(e) => {
                     ON_SUBMIT(e);
                   }}
+                  style={{
+                    padding: "5px 10px",
+                    marginRight: "10px",
+                    ...Styles.button,
+                  }}
                 />
 
                 <Button
@@ -569,7 +652,11 @@ const Form = forwardRef(
                     e.preventDefault();
                     ON_CANCEL();
                   }}
-                  style={Styles?.button}
+                  style={{
+                    padding: "5px 10px",
+                    marginLeft: "10px",
+                    ...Styles.button,
+                  }}
                 />
               </div>
             </form>
@@ -598,315 +685,3 @@ const Form = forwardRef(
 );
 
 export default Form;
-
-const FieldSet = ({
-  element,
-  Styles,
-  formType,
-  addToFielSetRefs,
-  addToRequiredRefs,
-  formData,
-  addToSelectedValueFxns,
-  addToValididyPhoneNumberRefs,
-  addTosetRadioFxnRefs,
-  bools,
-}) => {
-  const [showLegend, setShowLegend] = useState(true);
-
-  const inputStyle = {
-    valid: "border-2  border-slate-200 rounded-lg w-full mb-2 ",
-    invlaid: "border-0 border-b-2 border-red-500 mb-2",
-  };
-
-  const falsifyShowLegend = () => {
-    setTimeout(() => {
-      setShowLegend(true);
-    }, 2000);
-  };
-
-  return (
-    <fieldset
-      className={inputStyle.valid}
-      ref={addToFielSetRefs}
-      style={Styles?.input}
-    >
-      {showLegend && !formType?.regular && (
-        <legend className="text-yellow-700 text-[12px]">
-          {element?.label}{" "}
-          <span className="text-xs relative top-[25%]">
-            {element?.input?.required && (
-              <i className="text-[11px] text-slate-400 relative bottom-[1px]">
-                required
-              </i>
-            )}
-            <span style={{ visibility: "hidden" }}> *</span>
-          </span>
-        </legend>
-      )}
-      <label style={Styles?.row}>
-        {!showLegend ||
-          (formType?.regular && (
-            <div className="transition-all relative" style={Styles?.label}>
-              {element?.label}{" "}
-              <span className="text-xs absolute right-0 top-[50%] translate-y-[-50%]">
-                {element?.input?.required && " *"}
-              </span>{" "}
-            </div>
-          ))}
-
-        {element?.input?.type === "text" ||
-        element?.input?.type === "textarea" ||
-        element?.input?.type === "email" ||
-        element?.input?.type === "number" ||
-        element?.input?.type === "date" ||
-        element?.input?.type === "checkbox" ||
-        element?.input?.type === "date-time" ? (
-          <input
-            style={{
-              padding: "0px",
-              margin: "0px",
-              border: "0px",
-              outline: "none",
-              width: "calc(100% - 10px)",
-              position: "relative",
-              left: "5px",
-            }}
-            {...element?.input}
-            id={element?.label?.toLowerCase()}
-            placeholder={
-              element?.input?.placeholder
-                ? ` ${element?.input?.placeholder}`
-                : ` ${element?.label?.trim()}`
-            }
-            name={element?.label.toLowerCase()}
-            ref={addToRequiredRefs}
-            onChange={element.onChange}
-            defaultValue={element?.data}
-            onFocus={() => {}}
-          ></input>
-        ) : element?.input?.type?.trim()?.toLowerCase() === "select" ? (
-          <Select
-            ref={addToSelectedValueFxns}
-            addToRequiredRefs={addToRequiredRefs}
-            element={element}
-            formData={formData}
-            Styles={Styles}
-          />
-        ) : element?.input?.type === "tel" ? (
-          <PhoneNumber
-            element={element}
-            addToRequiredRefs={addToRequiredRefs}
-            ref={addToValididyPhoneNumberRefs}
-            Styles={Styles?.phoneNumber}
-            bools={bools}
-          />
-        ) : element?.input?.type === "radio" ? (
-          <Radio
-            ref={addTosetRadioFxnRefs}
-            element={element}
-            addToRequiredRefs={addToRequiredRefs}
-            formData={formData}
-            Styles={Styles}
-          />
-        ) : (
-          ""
-        )}
-      </label>
-    </fieldset>
-  );
-};
-
-const Radio = forwardRef(({ element, addToRequiredRefs, formData }, ref) => {
-  useImperativeHandle(ref, () => {
-    return { setRadioValue: setInputValue };
-  });
-
-  const [showChildren, setShowChildren] = useState(false);
-  const [inputValue, setInputValue] = useState(
-    formData?.find((ele) => {
-      return ele?.input?.type?.toLowerCase()?.includes("radio");
-    })?.data
-  );
-
-  return (
-    <div className="w-fit">
-      {!showChildren ? (
-        <input
-          style={{
-            margin: "0px auto",
-            padding: "0px",
-            width: "calc(100% - 10px)",
-            position: "relative",
-            left: "5px",
-            outline: "none",
-          }}
-          autoComplete={element?.input?.autoComplete}
-          id={element?.label?.toLowerCase()}
-          placeholder={
-            element?.input?.placeholder
-              ? ` ${element?.input?.placeholder}`
-              : ` ${element?.label?.trim()}`
-          }
-          name={element?.label.toLowerCase()}
-          ref={addToRequiredRefs}
-          value={inputValue}
-          onChange={(e) => {
-            setInputValue(e.target.value);
-          }}
-          onFocus={() => {
-            setTimeout(() => {
-              setShowChildren(true);
-            }, 1);
-          }}
-          onClick={() => {
-            setTimeout(() => {
-              setShowChildren(true);
-            }, 1);
-          }}
-        ></input>
-      ) : (
-        element?.children?.map((child, index) => {
-          return (
-            <button
-              key={index}
-              className="w-14 h-6 text-white bg-slate-500 rounded-full text-xs ml-1 hover:bg-slate-700"
-              onClick={(e) => {
-                e.preventDefault();
-                setShowChildren(false);
-                setInputValue(child);
-                element.data = child;
-              }}
-            >
-              {child}
-            </button>
-          );
-        })
-      )}
-    </div>
-  );
-});
-
-const PhoneNumber = forwardRef(({ element, addToRequiredRefs, bools }, ref) => {
-  const [PhoneInputValue, setPhoneInputValue] = useState(
-    parsePhoneNumber(element?.data, localStorage.getItem(`${element?.label}`))
-      ?.number
-  );
-  const [countryCode, setCountryCode] = useState(
-    localStorage.getItem(`${element?.label}`)
-  );
-
-  useEffect(() => {
-    if (countryCode) {
-      if (countryCode) {
-        localStorage.setItem(`${element?.label}`, countryCode);
-      }
-    }
-  }, [countryCode, element?.label]);
-
-  return (
-    <div>
-      <PhoneInput
-        defaultCountry={localStorage.getItem(`${element.label}`)}
-        style={{ border: "0px" }}
-        ref={addToRequiredRefs}
-        autoComplete="false"
-        placeholder={
-          element?.input?.placeholder
-            ? ` ${element?.input?.placeholder}`
-            : ` Enter ${element?.label?.toLowerCase()}`
-        }
-        onChange={setPhoneInputValue}
-        value={PhoneInputValue}
-        onCountryChange={setCountryCode}
-        name={element?.label}
-        type="tel"
-      ></PhoneInput>
-    </div>
-  );
-});
-
-const Select = forwardRef(({ element, addToRequiredRefs }, ref) => {
-  useImperativeHandle(ref, () => {
-    return {
-      setSelectedValue: setSelectedItem,
-    };
-  });
-
-  const [showChildren, setShowChildren] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(element?.data);
-
-  const selectItemFilterBoxRef = useRef();
-  useOutsideClicked(selectItemFilterBoxRef, setShowChildren, false, []);
-
-  //selectedObject && console.log(selectedObject);
-  return (
-    <main className="relative  ">
-      <input
-        style={{
-          margin: "0px auto",
-          padding: "0px",
-          width: "calc(100% - 10px)",
-          position: "relative",
-          left: "5px",
-          outline: "none",
-          border: "0px",
-        }}
-        autoComplete={element?.input?.autoComplete}
-        id={element?.label?.toLowerCase()}
-        placeholder={
-          element?.input?.placeholder
-            ? ` ${element?.input?.placeholder}`
-            : ` Enter ${element?.label?.toLowerCase()}`
-        }
-        name={element?.label.toLowerCase()}
-        ref={addToRequiredRefs}
-        condition={element?.input?.condition}
-        onClick={() => {
-          setShowChildren(true);
-        }}
-        onChange={(e) => {
-          setShowChildren(true);
-          setSelectedItem(e?.target?.value);
-        }}
-        value={selectedItem}
-      ></input>
-      {showChildren && (
-        <section
-          className=" absolute w-full  z-10"
-          ref={selectItemFilterBoxRef}
-        >
-          {element?.children?.map((child, index) => {
-            return (
-              <div
-                key={child?.id ? child?.id : child?._id ? child?._id : index}
-              >
-                <button
-                  className=" w-full min-h-[40px] bg-slate-400 text-white text-left hover:bg-slate-600"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    element.data = child;
-                    setShowChildren(false);
-                    setSelectedItem(
-                      child instanceof Object
-                        ? `${child?.name ? child?.name : ""} ${
-                            child?.type ? child?.type : ""
-                          } ${child?.size ? child?.size : ""}`
-                        : child
-                    );
-                  }}
-                >
-                  {child instanceof Object
-                    ? " " +
-                      ` ${child?.name ? child?.name : ""} ${
-                        child?.type ? child?.type : ""
-                      } ${child?.size ? child?.size : ""}`
-                    : " " + child}
-                </button>
-              </div>
-            );
-          })}
-        </section>
-      )}
-    </main>
-  );
-});

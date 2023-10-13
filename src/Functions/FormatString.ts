@@ -1,4 +1,4 @@
-export const formatProperNoun = (wordOrName) => {
+export const formatProperNoun = (wordOrName: string) => {
   if (
     !wordOrName ||
     wordOrName === "" ||
@@ -9,9 +9,9 @@ export const formatProperNoun = (wordOrName) => {
     if (wordOrName === "" || wordOrName === " ") return wordOrName.trim();
     return wordOrName;
   } else {
-    let formatedNoun;
-    let firstLetter;
-    let noun = wordOrName;
+    let formatedNoun: string = "";
+    let firstLetter: string = "";
+    let noun: string = wordOrName;
     for (var i = 0; i <= noun.length; i++) {
       if (i === 0) {
         firstLetter = noun[i].toUpperCase();
@@ -30,13 +30,13 @@ export const formatProperNoun = (wordOrName) => {
   }
 };
 
-export const formatFullName = (fullname) => {
+export const formatFullName = (fullname: string) => {
   if (!fullname || fullname === null || fullname === undefined) {
     if (fullname === "" || fullname === " ") return fullname.trim();
     return fullname;
   } else {
-    let formatedFullName;
-    let isNotBlankValue = [];
+    let formatedFullName: string = "";
+    let isNotBlankValue: Array<string> = [];
 
     if (fullname.split(" ").length < 2) {
       return false;
@@ -52,10 +52,12 @@ export const formatFullName = (fullname) => {
       } else {
         for (i = 0; i <= isNotBlankValue.length; i++) {
           if (i !== isNotBlankValue.length) {
-            let name = isNotBlankValue[i];
-            let firstCharacter = name.slice(0, 1).toUpperCase();
-            let OtherCharacters = name.slice(1, name.length).toLowerCase();
-            let newName = firstCharacter + OtherCharacters;
+            let name: string = isNotBlankValue[i];
+            let firstCharacter: string = name.slice(0, 1).toUpperCase();
+            let OtherCharacters: string = name
+              .slice(1, name.length)
+              .toLowerCase();
+            let newName: string = firstCharacter + OtherCharacters;
 
             formatedFullName = formatedFullName + " " + newName.trim();
           }
@@ -68,7 +70,7 @@ export const formatFullName = (fullname) => {
   }
 };
 
-export const formatEmail = (email) => {
+export const formatEmail = (email: string) => {
   if (email === "" || email === null || email === undefined) {
     if (email === "" || email === " ") return email.trim();
     return email;
@@ -103,7 +105,7 @@ export const formatEmail = (email) => {
   }
 };
 
-const UnallowedEmailSymbols = (phrase) => {
+const UnallowedEmailSymbols = (phrase: string) => {
   if (
     phrase.includes("~") ||
     phrase.includes("!") ||
@@ -159,7 +161,7 @@ export function createPathname(username) {
   }
 }
 
-export const replaceWhiteSpaceWithDash = (username) => {
+export const replaceWhiteSpaceWithDash = (username: string) => {
   if (
     username === null ||
     username === undefined ||

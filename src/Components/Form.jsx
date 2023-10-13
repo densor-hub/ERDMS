@@ -1,15 +1,14 @@
 import { useState, useRef, useImperativeHandle } from "react";
-import PhoneInput, {
-  isValidPhoneNumber,
-  parsePhoneNumber,
-} from "react-phone-number-input";
+import { isValidPhoneNumber, parsePhoneNumber } from "react-phone-number-input";
 import { forwardRef } from "react";
 import { useEffect } from "react";
-import { replaceWhiteSpaceWithDash } from "../Functions/FormatString";
+import { replaceWhiteSpaceWithDash } from "../Functions/FormatString.ts";
 import UploadFile from "./UploadFile";
 import Modal from "./Modal";
 import Button from "./Button";
-import { useOutsideClicked } from "../Hooks/useOutSideClicked";
+import Select from "./Select";
+import Radio from "./Radio";
+import PhoneInput from "./PhoneInput";
 
 const Form = forwardRef(
   (
@@ -42,6 +41,7 @@ const Form = forwardRef(
       //customised submit Function from developer;
       onCancel,
       //customised cancel Function from developer
+      formType,
     },
     ref
   ) => {
@@ -55,15 +55,25 @@ const Form = forwardRef(
 
     let validatedData = useRef({});
     const [feedback, setFeedback] = useState("");
-    const inputStyle = {
-      valid: "border-2  border-slate-200 rounded-lg w-full",
-      invlaid: "border-0 border-b-2 border-red-500",
-    };
 
+    const inputStyle = {
+      valid: "border-2  border-slate-200 rounded-lg w-full mb-2 ",
+      invlaid: "border-0 border-b-2 border-red-500 mb-2",
+    };
     const [bools, setBools] = useState({
       genderSelected: false,
       showCancelModal: false,
     });
+
+    //for Fieldsets
+    const FieldSetRefs = useRef([]);
+    const addToFielSetRefs = (element) => {
+      if (element && !FieldSetRefs.current?.includes(element)) {
+        FieldSetRefs.current?.push(element);
+      } else {
+        FieldSetRefs.current?.pop(element);
+      }
+    };
 
     const RequiredRefs = useRef([]);
     const addToRequiredRefs = (element) => {
@@ -122,15 +132,6 @@ const Form = forwardRef(
       }
     };
 
-    //feedback
-    useEffect(() => {
-      if (feedback) {
-        setTimeout(() => {
-          setFeedback("");
-        }, 3000);
-      }
-    });
-
     //for setting file
     useEffect(() => {
       formData?.forEach((element) => {
@@ -168,7 +169,7 @@ const Form = forwardRef(
               ) {
                 validityChecked[index] = true;
               } else if (
-                Ref?.uploadFileInputRef?.files?.length <= 0 ||
+                Ref?.uploadFileInputRef?.files?.length <= 0 &&
                 element?.data === ""
               ) {
                 validityChecked[index] = false;
@@ -203,7 +204,7 @@ const Form = forwardRef(
           if (ref !== null && ref !== undefined) {
             if (element.input?.required) {
               if (!ref?.value) {
-                ref.style.borderColor = "red";
+                FieldSetRefs.current[index].style.borderColor = "red";
                 setFeedback("Please enter all required fields.");
                 setBools((p) => {
                   return { ...p, invalidPhone: true };
@@ -218,10 +219,10 @@ const Form = forwardRef(
                       return i === element?.data;
                     })
                   ) {
-                    ref.style.borderColor = "";
+                    FieldSetRefs.current[index].style.borderColor = "";
                     validityChecked[index] = true;
                   } else {
-                    ref.style.borderColor = "red";
+                    FieldSetRefs.current[index].style.borderColor = "red";
                     validityChecked[index] = false;
                     setFeedback("Invalid value detected");
                   }
@@ -258,6 +259,7 @@ const Form = forwardRef(
                         setBools((p) => {
                           return { ...p, invalidPhone: false };
                         });
+                        FieldSetRefs.current[index].style.borderColor = "";
                       } else {
                         setFeedback(
                           "Please select country and enter valid phone numner"
@@ -266,11 +268,12 @@ const Form = forwardRef(
                         setBools((p) => {
                           return { ...p, invalidPhone: true };
                         });
+                        FieldSetRefs.current[index].style.borderColor = "red";
                       }
                     } else {
                       //any other input element
                       if (element?.validCondintion(ref?.value)) {
-                        ref.style.borderColor = "";
+                        FieldSetRefs.current[index].style.borderColor = "";
 
                         setformData((p) => {
                           p.find((item) => {
@@ -284,14 +287,14 @@ const Form = forwardRef(
 
                         validityChecked[index] = true;
                       } else {
-                        ref.style.borderColor = "red";
+                        FieldSetRefs.current[index].style.borderColor = "red";
                         setFeedback("Invalid value detected");
                         validityChecked[index] = false;
                       }
                     }
                   } else {
                     //if no valid condition function
-                    ref.style.borderColor = "";
+                    FieldSetRefs.current[index].style.borderColor = "";
                     setformData((p) => {
                       p.find((item) => {
                         return (
@@ -307,13 +310,13 @@ const Form = forwardRef(
                 }
               }
             } else {
-              ref.style.borderColor = "";
+              FieldSetRefs.current[index].style.borderColor = "";
               //if not required
               if (ref?.value) {
                 if (element?.validCondintion) {
                   if (element.validCondintion(ref?.value)) {
                     //if no valid condition function
-                    ref.style.borderColor = "";
+                    FieldSetRefs.current[index].style.borderColor = "";
                     validityChecked[index] = true;
 
                     setformData((p) => {
@@ -326,13 +329,13 @@ const Form = forwardRef(
                       return [...p];
                     });
                   } else {
-                    ref.style.borderColor = "red";
+                    FieldSetRefs.current[index].style.borderColor = "red";
                     validityChecked[index] = false;
                     setFeedback("Invalid value detected");
                   }
                 } else {
                   //if no valid condition function
-                  ref.style.borderColor = "";
+                  FieldSetRefs.current[index].style.borderColor = "";
                   validityChecked[index] = true;
 
                   setformData((p) => {
@@ -409,6 +412,9 @@ const Form = forwardRef(
     };
 
     const clearInputs = () => {
+      FieldSetRefs.current?.forEach((element) => {
+        element.style.borderColor = "";
+      });
       RequiredRefs?.current?.forEach((element) => {
         element.value = "";
       });
@@ -494,6 +500,16 @@ const Form = forwardRef(
         return [...p];
       });
     };
+
+    //feedback
+    useEffect(() => {
+      if (feedback) {
+        setTimeout(() => {
+          setFeedback("");
+        }, 3000);
+      }
+    });
+
     return (
       <>
         {bools?.showCancelModal && (
@@ -519,101 +535,114 @@ const Form = forwardRef(
           </div>
           <section className="flex w-full">
             <form className="w-[400px]" style={Styles?.form}>
-              <table className="w-full">
-                <tbody>
-                  {formData?.length > 0 &&
-                    formData.map((element, index) => {
-                      return (
-                        element?.input?.type !== "file" && (
-                          <tr key={index}>
-                            <td style={Styles?.row}>
-                              <div style={Styles?.label}>
-                                <label>{element?.label} </label>
-                                <span className="text-xs relative top-[25%]">
-                                  {element?.input?.required && "*"}
-                                </span>
-                              </div>
-
-                              {/* //refer to input component if there is any ambiguity */}
-                              {element?.input?.type === "text" ||
-                              element?.input?.type === "email" ||
-                              element?.input?.type === "number" ||
-                              element?.input?.type === "date" ||
-                              element?.input?.type === "date-time" ? (
-                                <input
-                                  {...element?.input}
-                                  id={element?.label?.toLowerCase()}
-                                  placeholder={
-                                    element?.input?.placeholder
-                                      ? ` ${element?.input?.placeholder}`
-                                      : ` Enter ${element?.label?.toLowerCase()}`
-                                  }
-                                  name={element?.label.toLowerCase()}
-                                  ref={addToRequiredRefs}
-                                  className={inputStyle.valid}
-                                  onChange={element.onChange}
-                                  defaultValue={element?.data}
-                                  style={Styles?.input}
-                                ></input>
-                              ) : element?.input?.type
-                                  ?.trim()
-                                  ?.toLowerCase() === "select" ? (
-                                <Select
-                                  ref={addToSelectedValueFxns}
-                                  addToRequiredRefs={addToRequiredRefs}
-                                  element={element}
-                                  formData={formData}
-                                  Styles={Styles}
-                                />
-                              ) : element?.input?.type === "textarea" ? (
-                                <textarea
-                                  type={element?.input?.type}
-                                  autoComplete={element?.input?.autoComplete}
-                                  id={element?.label?.toLowerCase()}
-                                  placeholder={
-                                    element?.input?.placeholder
-                                      ? ` ${element?.input?.placeholder}`
-                                      : ` Enter ${element?.label?.toLowerCase()}`
-                                  }
-                                  name={element?.label.toLowerCase()}
-                                  ref={addToRequiredRefs}
-                                  className={inputStyle.valid}
-                                  onChange={element.onChange}
-                                  defaultValue={element?.data}
-                                  style={Styles?.input}
-                                ></textarea>
-                              ) : element?.input?.type === "tel" ? (
-                                <PhoneNumber
-                                  element={element}
-                                  addToRequiredRefs={addToRequiredRefs}
-                                  ref={addToValididyPhoneNumberRefs}
-                                  Styles={Styles?.phoneNumber}
-                                  bools={bools}
-                                />
-                              ) : element?.input?.type === "radio" ? (
-                                <Radio
-                                  ref={addTosetRadioFxnRefs}
-                                  element={element}
-                                  addToRequiredRefs={addToRequiredRefs}
-                                  formData={formData}
-                                  Styles={Styles}
-                                />
-                              ) : (
-                                ""
+              {formData?.length > 0 &&
+                formData.map((element, index) => {
+                  return (
+                    element?.input?.type !== "file" && (
+                      <fieldset
+                        className={inputStyle.valid}
+                        ref={addToFielSetRefs}
+                        style={Styles?.input}
+                      >
+                        {!formType?.regular && (
+                          <legend className="text-yellow-700 text-[12px]">
+                            {element?.label}{" "}
+                            <span className="text-xs relative top-[25%]">
+                              {element?.input?.required && (
+                                <i className="text-[11px] text-slate-400 relative bottom-[1px]">
+                                  required
+                                </i>
                               )}
-                            </td>
-                          </tr>
-                        )
-                      );
-                    })}
-                </tbody>
-              </table>
+                              <span style={{ visibility: "hidden" }}> *</span>
+                            </span>
+                          </legend>
+                        )}
+                        <label style={Styles?.row}>
+                          {formType?.regular && (
+                            <div
+                              className="transition-all relative"
+                              style={Styles?.label}
+                            >
+                              {element?.label}{" "}
+                              <span className="text-xs absolute right-0 top-[50%] translate-y-[-50%]">
+                                {element?.input?.required && " *"}
+                              </span>{" "}
+                            </div>
+                          )}
 
-              <div className="mt-5">
+                          {element?.input?.type === "text" ||
+                          element?.input?.type === "textarea" ||
+                          element?.input?.type === "email" ||
+                          element?.input?.type === "number" ||
+                          element?.input?.type === "date" ||
+                          element?.input?.type === "checkbox" ||
+                          element?.input?.type === "date-time" ? (
+                            <input
+                              style={{
+                                padding: "0px",
+                                margin: "0px",
+                                border: "0px",
+                                outline: "none",
+                                width: "calc(100% - 10px)",
+                                position: "relative",
+                                left: "5px",
+                              }}
+                              {...element?.input}
+                              id={element?.label?.toLowerCase()}
+                              placeholder={
+                                element?.input?.placeholder
+                                  ? ` ${element?.input?.placeholder}`
+                                  : ` ${element?.label?.trim()}`
+                              }
+                              name={element?.label.toLowerCase()}
+                              ref={addToRequiredRefs}
+                              onChange={element.onChange}
+                              defaultValue={element?.data}
+                              onFocus={() => {}}
+                            ></input>
+                          ) : element?.input?.type?.trim()?.toLowerCase() ===
+                            "select" ? (
+                            <Select
+                              ref={addToSelectedValueFxns}
+                              REF={addToRequiredRefs}
+                              selectData={element}
+                              formData={formData}
+                              Styles={Styles}
+                            />
+                          ) : element?.input?.type === "tel" ? (
+                            <PhoneInput
+                              phoneNumberData={element}
+                              REF={addToRequiredRefs}
+                              ref={addToValididyPhoneNumberRefs}
+                              Styles={Styles?.phoneNumber}
+                              bools={bools}
+                            />
+                          ) : element?.input?.type === "radio" ? (
+                            <Radio
+                              ref={addTosetRadioFxnRefs}
+                              radioData={element}
+                              REF={addToRequiredRefs}
+                              Styles={Styles}
+                            />
+                          ) : (
+                            ""
+                          )}
+                        </label>
+                      </fieldset>
+                    )
+                  );
+                })}
+
+              <div className="mt-5 h-[100px]">
                 <Button
                   label={content?.next ? "Save" : "Submit"}
                   onClick={(e) => {
                     ON_SUBMIT(e);
+                  }}
+                  style={{
+                    padding: "5px 10px",
+                    marginRight: "10px",
+                    ...Styles.button,
                   }}
                 />
 
@@ -623,7 +652,11 @@ const Form = forwardRef(
                     e.preventDefault();
                     ON_CANCEL();
                   }}
-                  style={Styles?.button}
+                  style={{
+                    padding: "5px 10px",
+                    marginLeft: "10px",
+                    ...Styles.button,
+                  }}
                 />
               </div>
             </form>
@@ -652,191 +685,3 @@ const Form = forwardRef(
 );
 
 export default Form;
-
-const Radio = forwardRef(
-  ({ element, addToRequiredRefs, formData, bools }, ref) => {
-    useImperativeHandle(ref, () => {
-      return { setRadioValue: setInputValue };
-    });
-    const inputStyle = {
-      valid: "border-2  border-slate-200 rounded-lg w-full",
-      invlaid: "border-0 border-b-2 border-red-500",
-    };
-
-    const [showChildren, setShowChildren] = useState(false);
-    const [inputValue, setInputValue] = useState(
-      formData?.find((ele) => {
-        return ele?.input?.type?.toLowerCase()?.includes("radio");
-      })?.data
-    );
-
-    return (
-      <div className="w-fit ">
-        {!showChildren ? (
-          <input
-            autoComplete={element?.input?.autoComplete}
-            id={element?.label?.toLowerCase()}
-            placeholder={
-              element?.input?.placeholder
-                ? ` ${element?.input?.placeholder}`
-                : ` Enter ${element?.label?.toLowerCase()}`
-            }
-            name={element?.label.toLowerCase()}
-            ref={addToRequiredRefs}
-            className={inputStyle.valid}
-            value={inputValue}
-            onChange={() => {
-              setShowChildren(true);
-            }}
-            onClick={() => {
-              setShowChildren(true);
-            }}
-          ></input>
-        ) : (
-          element?.children?.map((child, index) => {
-            return (
-              <button
-                key={index}
-                className="w-14 h-6 text-white bg-slate-500 rounded-full text-xs ml-1 hover:bg-slate-700"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setShowChildren(false);
-                  setInputValue(child);
-                  element.data = child;
-                }}
-              >
-                {child}
-              </button>
-            );
-          })
-        )}
-      </div>
-    );
-  }
-);
-
-const PhoneNumber = forwardRef(({ element, addToRequiredRefs, bools }, ref) => {
-  const [PhoneInputValue, setPhoneInputValue] = useState(
-    parsePhoneNumber(element?.data, localStorage.getItem(`${element?.label}`))
-      ?.number
-  );
-  const [countryCode, setCountryCode] = useState(
-    localStorage.getItem(`${element?.label}`)
-  );
-
-  useEffect(() => {
-    if (countryCode) {
-      if (countryCode) {
-        localStorage.setItem(`${element?.label}`, countryCode);
-      }
-    }
-  }, [countryCode, element?.label]);
-
-  return (
-    <div
-      className={
-        bools?.invalidPhone
-          ? "border-2  border-red-500 rounded-lg"
-          : "border-2  rounded-lg "
-      }
-    >
-      <PhoneInput
-        defaultCountry={localStorage.getItem(`${element.label}`)}
-        style={{ border: "0px" }}
-        ref={addToRequiredRefs}
-        autoComplete="false"
-        placeholder={
-          element?.input?.placeholder
-            ? ` ${element?.input?.placeholder}`
-            : ` Enter ${element?.label?.toLowerCase()}`
-        }
-        onChange={setPhoneInputValue}
-        value={PhoneInputValue}
-        onCountryChange={setCountryCode}
-        name={element?.label}
-        type="tel"
-      ></PhoneInput>
-    </div>
-  );
-});
-
-const Select = forwardRef(({ element, addToRequiredRefs, Styles }, ref) => {
-  useImperativeHandle(ref, () => {
-    return {
-      setSelectedValue: setSelectedItem,
-    };
-  });
-  const inputStyle = {
-    valid: "border-2  border-slate-200 rounded-lg w-full",
-    invlaid: "border-0 border-b-2 border-red-500",
-  };
-  const [showChildren, setShowChildren] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(element?.data);
-
-  const selectItemFilterBoxRef = useRef();
-  useOutsideClicked(selectItemFilterBoxRef, setShowChildren, false, []);
-
-  //selectedObject && console.log(selectedObject);
-  return (
-    <main className="relative  ">
-      <input
-        style={Styles?.input}
-        autoComplete={element?.input?.autoComplete}
-        id={element?.label?.toLowerCase()}
-        placeholder={
-          element?.input?.placeholder
-            ? ` ${element?.input?.placeholder}`
-            : ` Enter ${element?.label?.toLowerCase()}`
-        }
-        name={element?.label.toLowerCase()}
-        ref={addToRequiredRefs}
-        condition={element?.input?.condition}
-        className={inputStyle.valid}
-        onClick={() => {
-          setShowChildren(true);
-        }}
-        onChange={(e) => {
-          setShowChildren(true);
-          setSelectedItem(e?.target?.value);
-        }}
-        value={selectedItem}
-      ></input>
-      {showChildren && (
-        <section
-          className=" absolute w-[100px]  z-10"
-          ref={selectItemFilterBoxRef}
-        >
-          {element?.children?.map((child, index) => {
-            return (
-              <div
-                key={child?.id ? child?.id : child?._id ? child?._id : index}
-              >
-                <button
-                  className=" w-[170px] min-h-[40px] bg-slate-400 text-white"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    element.data = child;
-                    setShowChildren(false);
-                    setSelectedItem(
-                      child instanceof Object
-                        ? `${child?.name ? child?.name : ""} ${
-                            child?.type ? child?.type : ""
-                          } ${child?.size ? child?.size : ""}`
-                        : child
-                    );
-                  }}
-                >
-                  {child instanceof Object
-                    ? `${child?.name ? child?.name : ""} ${
-                        child?.type ? child?.type : ""
-                      } ${child?.size ? child?.size : ""}`
-                    : child}
-                </button>
-              </div>
-            );
-          })}
-        </section>
-      )}
-    </main>
-  );
-});

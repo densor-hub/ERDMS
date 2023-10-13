@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
-import { convertMonthTo_ALPHABETS } from "../Functions/DateFunctions";
+import { convertMonthTo_ALPHABETS } from "../Functions/DateFunctions.ts";
 
 const List = ({
   CompleteData,
@@ -173,7 +173,7 @@ const IndividualRecord = ({
                         : "text-xs bg-slate-700 text-white px-1 ml-1 rounded-lg   hover:p-2"
                     }
                   >
-                    {e.title}
+                    {e?.title}
                   </button>
                 );
               })}

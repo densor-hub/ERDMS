@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  isValidDate,
-  convertMonthTo_ALPHABETS,
-} from "../Functions/DateFunctions";
+import { convertMonthTo_ALPHABETS } from "../Functions/DateFunctions.ts";
 import axios from "axios";
 import Modal from "./Modal";
 import List from "../Components/List";
@@ -13,7 +10,7 @@ import Form from "./Form";
 import {
   insertArrayItem,
   removeArrayItem,
-} from "../Functions/FormatArraysAndObjects";
+} from "../Functions/FormatArraysAndObjects.ts";
 
 const PurchaseForm = ({ TypeOfPurchase }) => {
   const ConvertNANtoZero = (data) => {
@@ -500,6 +497,12 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
     }
   };
   const OnFormSubmit = (ValidatedData_FromForm) => {
+    let piecesInPacks;
+    if (ConvertNANtoZero(ValidatedData_FromForm?.pcs_in_packs) > 0) {
+      piecesInPacks = ConvertNANtoZero(ValidatedData_FromForm?.pcs_in_packs);
+    } else {
+      piecesInPacks = 1;
+    }
     const itemObject = {
       id: ValidatedData_FromForm?.item?.id,
       name: `${
@@ -517,7 +520,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
       }`,
       quantity: ValidatedData_FromForm?.quantity,
       price: ValidatedData_FromForm?.unit_price,
-      addons: ValidatedData_FromForm?.addons,
+      addons: ConvertNANtoZero(ValidatedData_FromForm?.addons),
       totalDiscount:
         ConvertNANtoZero(ValidatedData_FromForm?.discount) *
         ConvertNANtoZero(ValidatedData_FromForm?.quantity),
@@ -533,10 +536,10 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
             ConvertNANtoZero(ValidatedData_FromForm?.quantity)
       ).toFixed(2),
       totalpieces:
-        ConvertNANtoZero(ValidatedData_FromForm?.puantity) *
-          ConvertNANtoZero(ValidatedData_FromForm?.pcs_in_pack) +
+        ConvertNANtoZero(ValidatedData_FromForm?.quantity) *
+          ConvertNANtoZero(piecesInPacks) +
         ConvertNANtoZero(ValidatedData_FromForm?.addons),
-      dateInNumers: ValidatedData_FromForm?.date,
+      dateInNumers: convertMonthTo_ALPHABETS(ValidatedData_FromForm?.date),
     };
 
     if (purchaseDetails?.ALLitemsSelected?.length === 0) {
@@ -583,6 +586,133 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
     }
   };
 
+  const confirmSwitch = () => {
+    if (
+      purchaseDetails?.specificPurchase?.toLowerCase()?.trim() ===
+      purcahseType?.pieces?.toLowerCase()?.trim()
+    ) {
+      //its already pieces
+      if (checkForOngoingOperation()) {
+        setPiecesformData((p) => {
+          return insertArrayItem(
+            p,
+            {
+              label: "Pcs in Packs",
+              data: "",
+              input: {
+                type: "number",
+                required: true,
+                autoComplete: "off",
+                placeholder: "Pieces in pack",
+              },
+              validCondintion: (number) => {
+                if (Number(number) > 0) {
+                  return true;
+                } else {
+                  return false;
+                }
+              },
+            },
+            2
+          );
+        });
+
+        setPurcahseDetails((p) => {
+          return {
+            ...p,
+            ALLitemsSelected: [],
+            detailsExpanded: [],
+            specificPurchase: purcahseType?.packs,
+          };
+        });
+      }
+    } else {
+      //ites already packs
+      if (checkForOngoingOperation()) {
+        setPiecesformData((p) => {
+          return removeArrayItem(
+            p,
+            p.indexOf(
+              p.find((element) => {
+                return (
+                  element.label?.toLowerCase() === "Pcs in Packs"?.toLowerCase()
+                );
+              })
+            ),
+            1
+          );
+        });
+
+        setPurcahseDetails((p) => {
+          return {
+            ...p,
+            ALLitemsSelected: [],
+            detailsExpanded: [],
+            specificPurchase: purcahseType?.pieces,
+          };
+        });
+      }
+    }
+    if (purchaseDetails?.ALLitemsSelected?.length > 0) {
+      setPiecesformData((p) => {
+        p.forEach((item) => {
+          item.data = "";
+        });
+        return [
+          ...p,
+          {
+            label: "Supplier",
+            data: "",
+            input: {
+              type: "select",
+              required: true,
+              autoComplete: "off",
+              placeholder: "Select Supplier",
+            },
+            validCondintion: (itemanme) => {
+              if (itemanme.length > 0) {
+                return true;
+              } else {
+                return false;
+              }
+            },
+            children: dataFromAPI?.fetchSuppliersResults,
+          },
+          {
+            label: "Date",
+            data: "",
+            input: {
+              type: "date",
+              required: true,
+              autoComplete: "off",
+              placeholder: "Select Supplier",
+            },
+            validCondintion: (itemanme) => {
+              if (itemanme.length > 0) {
+                return true;
+              } else {
+                return false;
+              }
+            },
+          },
+        ];
+      });
+    }
+
+    setPiecesformData((p) => {
+      p.forEach((ele) => {
+        return (ele.data = "");
+      });
+      return p;
+    });
+
+    formRef?.current?.clearInputs();
+
+    setBools((p) => {
+      return { ...p, showSwitchPurchaseTypeModal: false };
+    });
+  };
+
   useEffect(() => {
     if (feedback) {
       setTimeout(() => {
@@ -602,7 +732,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
         <Modal
           EffectNotice={"You will lose current operation"}
           ActionInOneWord={"Switch purchase type"}
-          ActionFucntion={cancelOperation}
+          ActionFucntion={confirmSwitch}
           CancelFunction={stopActionForModal}
         />
       )}
@@ -726,6 +856,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
                       setformData={setPiecesformData}
                       onSubmit={OnFormSubmit}
                       onCancel={onFormCancel}
+                      formType={{ regular: true }}
                       Styles={{
                         form: {
                           width: "fit-content",
@@ -737,15 +868,18 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
                           width: "fit-content",
                           height: "35px",
                         },
-                        label: {
-                          width: "95px",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          fontWeight: "normal",
-                          marginRight: "5px",
-                        },
+
                         input: {
+                          borderTop: "0px",
+                          borderLeft: "0px",
+                          borderRight: "0px",
                           borderRadius: "0px",
+                          margin: "0px",
+                          padding: "0px",
+                        },
+
+                        label: {
+                          minWidth: "90px",
                         },
                       }}
                     />

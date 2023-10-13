@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { createPathname } from "../Functions/FormatString";
+import { createPathname } from "../Functions/FormatString.ts";
 
 const UserProfileMenu = ({ userProfileMenuItems }) => {
   return (

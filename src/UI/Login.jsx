@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import Input from "../Components/Input";
 import Button from "../Components/Button";
 import Logo from "../Components/logo";
 
@@ -95,7 +94,7 @@ const Root = () => {
                 <tbody>
                   <tr>
                     <td className="pb-3">
-                      <Input
+                      <input
                         type={"text"}
                         id="username"
                         autoComplete={"off"}
@@ -108,7 +107,7 @@ const Root = () => {
                   </tr>
                   <tr>
                     <td className="pb-3">
-                      <Input
+                      <input
                         type={"text"}
                         id="password"
                         autoComplete={"off"}

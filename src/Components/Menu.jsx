@@ -1,5 +1,5 @@
 import MenuChild from "./MenuChild";
-import MenuContent from "./MenuContent";
+import MenuGrandChildren from "./MenuGrandChildren";
 import { AiOutlineSetting } from "react-icons/ai";
 import { MdOutlineInventory } from "react-icons/md";
 import { PiUsersThreeDuotone } from "react-icons/pi";
@@ -136,7 +136,7 @@ const Menu = () => {
             : " relative left-10  transition-transform duration-[1s] "
         }
       >
-        <MenuContent currentContent={currentContent}></MenuContent>
+        <MenuGrandChildren currentContent={currentContent} />
       </section>
     </main>
   );

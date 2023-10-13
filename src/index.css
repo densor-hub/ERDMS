@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+.generalBTN {
+  position: relative;
+  width: fit-content;
+  background: #334155;
+  color: white;
+  overflow: hidden;
+  border: 1.4px solid transparent;
+  border-radius: 10px;
+}
+
+.generalBTN .abss {
+  background-color: white;
+  width: 0%;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: all ease 0.3s;
+}
+.generalBTN:hover {
+  color: #334155;
+}
+.generalBTN:hover .abss {
+  width: 100%;
+  height: 100%;
+}
 .PhoneInput {
   display: grid;
   grid-template-columns: 30px calc(100% - 30px);
@@ -9,6 +36,7 @@
   border: 2px solid #e2e8f0;
   border-radius: 10px;
   width: 100%;
+  outline: none;
 }
 
 .PhoneInput:focus {
@@ -20,6 +48,7 @@
   border-bottom: 0px;
   width: 100%;
   border: 0px;
+  outline: none;
 }
 .PhoneInput input:focus {
   border: 0px;
@@ -66,7 +95,6 @@ input.extend {
 .PURCHASEComponentContainer {
   display: flex;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-
   position: relative;
   background-color: white;
   font-size: medium;
@@ -80,39 +108,6 @@ input.extend {
   top: 40px;
   font-size: large;
   margin-bottom: 10px;
-}
-
-.PURCHASEComponentContainer .heading .feedback {
-  position: relative;
-  color: white;
-  width: 90%;
-  margin: 0 auto;
-  text-align: center;
-  color: black;
-}
-
-.PURCHASEComponentContainer .IsRequired {
-  display: grid;
-  grid-template-columns: 90% 10%;
-}
-
-.PURCHASEComponentContainer .RequiredHash {
-  height: 10px;
-  position: relative;
-  top: 20%;
-  right: 5px;
-}
-
-.PURCHASEComponentContainer form input {
-  border: 0px;
-  border-bottom: 2px solid #cbd5e1;
-  color: black;
-  width: 150px;
-}
-
-.PURCHASEComponentContainer #piecesInPacks {
-  position: relative;
-  left: -8px;
 }
 
 .FormRightside {
@@ -131,88 +126,4 @@ input.extend {
   color: white;
   font: large;
   border-top: 3px solid rgb(155, 106, 106);
-}
-
-.itemsBeingPurchasedContainer {
-  background-color: #f3f3f3;
-  color: rgb(46, 51, 17);
-  font-size: small;
-  width: 100%;
-  position: relative;
-}
-
-.PURCHASEComponentContainer
-  .itemsBeingPurchasedContainer
-  .listOfItemsContainer {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  position: relative;
-  top: -20.5px;
-}
-
-.PiecesInPackContainerDiv {
-  text-align: center;
-  position: relative;
-  border-top: transparent;
-  color: white;
-  background-color: rgb(150, 150, 129);
-  border: 1px solid black;
-  border-top: 0px;
-  min-height: 5px;
-}
-
-.PiecesInPackContainerDiv span {
-  padding: 5px;
-}
-
-#slecteditemDeleteBTN {
-  background-color: rgb(102, 110, 66);
-  color: white;
-  width: 60px;
-  height: 25px;
-  border: 2px solid white;
-  border-radius: 15px;
-  position: relative;
-  left: -6px;
-  font-size: small;
-}
-
-#slecteditemDeleteBTN:hover,
-#slecteditemDeleteBTN:focus {
-  background-color: white;
-  color: rgb(40, 47, 6);
-  border: 2px solid red;
-}
-
-.PURCHASEComponentContainer .sellItemsListFilter {
-  width: 200px;
-  background-color: white;
-  color: rgb(46, 51, 17);
-  z-index: 100;
-  max-height: 120px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  margin-left: -55px;
-  margin-top: 9px;
-}
-
-.PURCHASEComponentContainer .filteredItem,
-.PURCHASEComponentContainer .flteredSuppliers {
-  font-size: small;
-  width: 100%;
-  padding: 10px;
-  border-top: 0px;
-  background-color: rgb(102, 110, 66);
-  color: white;
-  position: relative;
-  border: 0px;
-}
-
-.PURCHASEComponentContainer .filteredItem:hover,
-.PURCHASEComponentContainer .filteredItem:focus,
-.PURCHASEComponentContainer .flteredSuppliers:focus,
-.PURCHASEComponentContainer .flteredSuppliers:hover {
-  background-color: rgb(220, 217, 217);
-  color: rgb(46, 51, 17);
-  border: 1px solid rgb(102, 110, 66);
 }

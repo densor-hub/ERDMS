@@ -123,60 +123,112 @@ export const isValidDate = (untrimedDate: Date) => {
   }
 };
 
-export const convertMonthTo_ALPHABETS = (
-  date: Intl.DateTimeFormatPartTypes
-) => {
-  const months = [
-    "Jan",
-    "Feb",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+// export const convertMonthTo_ALPHABETS = (
+//   date: Intl.DateTimeFormatPartTypes
+// ) => {
+//   const months = [
+//     "Jan",
+//     "Feb",
+//     "March",
+//     "April",
+//     "May",
+//     "June",
+//     "July",
+//     "Aug",
+//     "Sept",
+//     "Oct",
+//     "Nov",
+//     "Dec",
+//   ];
 
-  for (var i = 0; i <= months.length; i++) {
-    if (months[i] === months[Number(date.split("-")[1])]) {
-      return `${date?.split("-")[0]}-${months[i - 1]}-${date?.split("-")[2]}`;
-    }
+//   for (var i = 0; i <= months.length; i++) {
+//     if (months[i] === months[Number(date.split("-")[1])]) {
+//       return `${date?.split("-")[0]}-${months[i - 1]}-${date?.split("-")[2]}`;
+//     }
+//   }
+// };
+
+// export const convertMonthTo_NUMBERS = (date: Date) => {
+//   var passedDate: string = date.toString()?.trim();
+//   let newDate: string = "";
+//   const months = [
+//     "Jan",
+//     "Feb",
+//     "March",
+//     "April",
+//     "May",
+//     "June",
+//     "July",
+//     "Aug",
+//     "Sept",
+//     "Oct",
+//     "Nov",
+//     "Dec",
+//   ];
+//   for (var i = 0; i <= months.length; i++) {
+//     if (months[i] === passedDate.split("-")[1]) {
+//       newDate = passedDate.replace(
+//         passedDate.split("-")[1],
+//         Number(i + 1).toString()
+//       );
+//     }
+//   }
+
+//   if (newDate.split("-")[1].length === 1) {
+//     return `${newDate.split("-")[0]}-0${newDate.split("-")[1]}-${
+//       newDate.split("-")[2]
+//     }`;
+//   } else return newDate;
+// };
+
+export const CovertMonthNumbersToAlphabets = (date: string) => {
+  if (!date || date.split("-").length !== 3) {
+    return date;
+  } else {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return `${date?.split("-")[0]}-${months[Number(date.split("-")[1]) - 1]}-${
+      date?.split("-")[2]
+    }`;
   }
 };
 
-export const convertMonthTo_NUMBERS = (date: Date) => {
-  var passedDate: string = date.toString()?.trim();
-  let newDate: string = "";
-  const months = [
-    "Jan",
-    "Feb",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  for (var i = 0; i <= months.length; i++) {
-    if (months[i] === passedDate.split("-")[1]) {
-      newDate = passedDate.replace(
-        passedDate.split("-")[1],
-        Number(i + 1).toString()
-      );
-    }
-  }
+export const convertMonthAlphabetsToNumbers = (date: string) => {
+  if (!date || date.split("-").length !== 3) {
+    return date;
+  } else {
+    let dateMonth =
+      date.split("-")[1].toUpperCase() + date.split("-")[1].slice(1);
 
-  if (newDate.split("-")[1].length === 1) {
-    return `${newDate.split("-")[0]}-0${newDate.split("-")[1]}-${
-      newDate.split("-")[2]
-    }`;
-  } else return newDate;
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    return `${date.split("-")[0]}-${
+      months.indexOf(dateMonth)?.toString().length < 2 ? "0" : ""
+    }${months.indexOf(dateMonth + 1)}-${date.split("-")[2]}`;
+  }
 };

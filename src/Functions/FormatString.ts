@@ -23,7 +23,7 @@ export const formatProperNoun = (wordOrName: string) => {
         if (formatedNoun === undefined) {
           return firstLetter;
         } else {
-          return firstLetter + formatedNoun.split("undefined")[1];
+          return firstLetter + formatedNoun.trim();
         }
       }
     }
@@ -62,7 +62,7 @@ export const formatFullName = (fullname: string) => {
             formatedFullName = formatedFullName + " " + newName.trim();
           }
           if (i === isNotBlankValue.length) {
-            return formatedFullName.split("undefined")[1].trim();
+            return formatedFullName.trim();
           }
         }
       }
@@ -168,12 +168,12 @@ export const replaceWhiteSpaceWithDash = (username: string) => {
     username === "" ||
     username.length <= 0
   ) {
-    return false;
+    return "";
   } else {
     if (username.split(" ")?.length < 2) {
       return username;
     } else if (username?.split(" ")?.length >= 2) {
-      let usernameInUrl = "";
+      let usernameInUrl: string = "";
       for (var i = 0; i < username?.split(" ")?.length; i++) {
         usernameInUrl = usernameInUrl + "_" + username?.split(" ")[i];
       }
@@ -182,5 +182,6 @@ export const replaceWhiteSpaceWithDash = (username: string) => {
         return usernameInUrl?.trim()?.slice(1, usernameInUrl?.trim()?.length);
       }
     }
+    return "";
   }
 };

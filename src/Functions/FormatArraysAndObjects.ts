@@ -1,4 +1,4 @@
-export const removeArrayItem = (array: Array<Object>, index: number) => {
+export const removeArrayItem = (array: Array<any>, index: number) => {
   if (index < 0 || index > array.length) {
     throw new Error("Index is out of range");
   } else {
@@ -14,7 +14,11 @@ export const removeArrayItem = (array: Array<Object>, index: number) => {
   }
 };
 
-export const insertArrayItem = (array: [], arrayItem: any, index: number) => {
+export const insertArrayItem = (
+  array: Array<any>,
+  arrayItem: any,
+  index: number
+) => {
   if (index < 0 || index > array.length) {
     throw new Error("Index is out of range");
   } else {

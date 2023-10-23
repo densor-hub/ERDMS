@@ -22,12 +22,14 @@
   transform: translate(-50%, -50%);
   transition: all ease 0.3s;
 }
+
 .generalBTN:hover {
-  color: #334155;
+  color: #a16207;
 }
 .generalBTN:hover .abss {
   width: 100%;
   height: 100%;
+  
 }
 .PhoneInput {
   display: grid;

@@ -35,6 +35,7 @@ export interface iStyles {
   phoneNumber?: CSSProperties;
   form?: CSSProperties;
   row?: CSSProperties;
+  bottonOnFocus?: CSSProperties;
 }
 
 export interface iNavigation {

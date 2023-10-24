@@ -2,6 +2,13 @@ import { GiNextButton, GiPreviousButton } from "react-icons/gi";
 import React, { useEffect, useRef, useState } from "react";
 import { iStyles } from "../Interfaces/Interfaces";
 
+interface iPageNavigation {
+  all: Array<number>;
+  displayed: Array<number>;
+  hidden: Array<number>;
+  previouslyDisplayed: Array<number>;
+}
+
 interface iPagination {
   allData: Array<any>;
   quantityPerPage: number;
@@ -27,51 +34,33 @@ const ListPagination = ({
   setCurrentContent,
   Styles,
 }: iPagination) => {
-  // const Styles = {
-  //   button: {
-  //     display: "flex",
-  //     border: "0px",
-  //     textAlign: "",
-  //     margin: "0px",
-  //     padding: "2px",
-  //     height: "100%",
-  //     backgroundColor: "transparent",
-  //     justifyContent: "center",
-  //     alignItems: "center",
-  //     width: "25px",
-  //   },
-  //   bottonOnFocus: {
-  //     backgroundColor: "#9999ff",
-  //     color: "white",
-  //     height: "25px",
-  //     width: "20px",
-  //     display: "flex",
-  //     justifyContent: "center",
-  //     alignItems: "center",
-  //   },
-  //   row: {
-  //     width: "100%",
-  //     fontSize: "small",
-  //     padding: "10px 0px",
-  //     backgroundColor: "#E8E8E8",
-  //     position: "relative",
-  //   },
-  //   input: {
-  //     width: "128px",
-  //   },
-  // };
-
   const [currentNumberOfItems, setCurrentNumberOfItems] =
-    useState(quantityPerPage);
-  const [feedback, setFeedback] = useState<string>("");
-  const inputRef = useRef<HTMLInputElement | null>(null);
+    useState<number>(quantityPerPage);
 
-  let NumberOfPages = Math.floor(allData.length / Number(quantityPerPage));
-  let buttonsLabelsArray = [];
+  const inputRef = useRef<HTMLSelectElement | null>(null);
+
+  let NumberOfPages: number = Math.floor(
+    allData.length / Number(quantityPerPage)
+  );
+  let buttonsLabelsArray: Array<number> = [];
 
   for (var i = 0; i <= NumberOfPages; i++) {
     buttonsLabelsArray.push(i);
   }
+
+  const [pagesNavigation, setPagesNavigations] = useState({
+    all: buttonsLabelsArray.slice(
+      startingPoint - 1,
+      endPointMultiplicator * quantityPerPage
+    ),
+    displayed: buttonsLabelsArray
+      .slice(startingPoint - 1, endPointMultiplicator * quantityPerPage)
+      ?.slice(0, 10),
+    hidden: buttonsLabelsArray
+      .slice(startingPoint - 1, endPointMultiplicator * quantityPerPage)
+      .slice(10),
+    previouslyDisplayed: [],
+  });
 
   const moveToNext = () => {
     if (buttonsLabelsArray.length - Number(startingPoint) > quantityPerPage) {
@@ -145,14 +134,38 @@ const ListPagination = ({
     setCurrentNumberOfItems(quantityPerPage);
   };
 
-  //clear feedback
-  useEffect(() => {
-    if (feedback) {
-      setTimeout(() => {
-        setFeedback("");
-      }, 3000);
+  const changeQuantityPerPage = () => {
+    if (
+      inputRef.current.value?.length > 0 &&
+      Number(inputRef.current.value) > 0
+    ) {
+      setQuantityPerPage(Number(inputRef.current.value));
+      setCurrentNumberOfItems(Number(inputRef.current.value));
+      setStartingPoint(1);
+      setendPointMultiplicator(1);
+      setCurrentContent(allData.slice(0, Number(inputRef.current.value)));
+    } else {
     }
-  }, [feedback]);
+  };
+
+  //set the navigation buttons when quatityPerPage or StartingPoint or EndPointMultiplicator changes
+  useEffect(() => {
+    setPagesNavigations((p: iPageNavigation) => {
+      return {
+        all: buttonsLabelsArray.slice(
+          startingPoint - 1,
+          endPointMultiplicator * quantityPerPage
+        ),
+        displayed: buttonsLabelsArray
+          .slice(startingPoint - 1, endPointMultiplicator * quantityPerPage)
+          ?.slice(0, 10),
+        hidden: buttonsLabelsArray
+          .slice(startingPoint - 1, endPointMultiplicator * quantityPerPage)
+          .slice(10),
+        previouslyDisplayed: p.previouslyDisplayed,
+      };
+    });
+  }, [quantityPerPage, startingPoint, endPointMultiplicator]);
 
   return (
     <div
@@ -181,37 +194,79 @@ const ListPagination = ({
       >
         <GiPreviousButton />
       </button>{" "}
-      {buttonsLabelsArray
-        .slice(startingPoint - 1, endPointMultiplicator * quantityPerPage)
-        .map((elements, index) => {
-          return (
-            <button
-              style={
-                currentContent[0] ===
-                allData[Number(elements) * Number(quantityPerPage)]
-                  ? {
-                      ...Styles?.bottonOnFocus,
-                    }
-                  : {
-                      ...Styles?.button,
-                    }
-              }
-              key={index}
-              onClick={() => {
-                setCurrentContent(
-                  allData.slice(
-                    Number(elements) * quantityPerPage,
-                    Number(elements) * quantityPerPage + quantityPerPage
-                  )
-                );
+      {pagesNavigation.previouslyDisplayed?.length > 0 && (
+        <button
+          style={{
+            ...Styles.bottonOnFocus,
+            backgroundColor: "#ddd6fe",
+            color: "black",
+            border: "1px solid rgb(0,0,0,0.3)",
+          }}
+          onClick={() => {
+            setPagesNavigations((p) => {
+              return {
+                all: p.all,
+                displayed: p.previouslyDisplayed,
+                hidden: p.displayed,
+                previouslyDisplayed: [],
+              };
+            });
+          }}
+        >
+          ...
+        </button>
+      )}
+      {pagesNavigation.displayed.map((elements, index) => {
+        return (
+          <button
+            style={
+              currentContent[0] ===
+              allData[Number(elements) * Number(quantityPerPage)]
+                ? {
+                    ...Styles?.bottonOnFocus,
+                  }
+                : {
+                    ...Styles?.button,
+                  }
+            }
+            key={index}
+            onClick={() => {
+              setCurrentContent(
+                allData.slice(
+                  Number(elements) * quantityPerPage,
+                  Number(elements) * quantityPerPage + quantityPerPage
+                )
+              );
 
-                setCurrentNumberOfItems((elements + 1) * quantityPerPage);
-              }}
-            >
-              {Number(elements + 1)}
-            </button>
-          );
-        })}
+              setCurrentNumberOfItems((elements + 1) * quantityPerPage);
+            }}
+          >
+            {Number(elements + 1)}
+          </button>
+        );
+      })}
+      {pagesNavigation.hidden.length > 0 && (
+        <button
+          style={{
+            ...Styles.bottonOnFocus,
+            backgroundColor: "#ddd6fe",
+            color: "black",
+            border: "1px solid rgb(0,0,0,0.3)",
+          }}
+          onClick={() => {
+            setPagesNavigations((p) => {
+              return {
+                all: p.all,
+                displayed: p.hidden,
+                hidden: [],
+                previouslyDisplayed: p.displayed,
+              };
+            });
+          }}
+        >
+          ...
+        </button>
+      )}
       <button
         style={{
           ...Styles.button,
@@ -247,40 +302,21 @@ const ListPagination = ({
       >
         <span style={{ display: "flex", marginRight: "10px" }}>
           <div style={{ display: "flex" }}>
-            <div
-              style={{ color: "red", fontSize: "small", marginRight: "5px" }}
-            >
-              <span style={{ visibility: "hidden" }}>.</span>
-              {feedback}
-            </div>
-            <input
-              type="number"
+            <select
               placeholder="Set page quantity"
               ref={inputRef}
-              style={{ ...Styles?.input }}
-            ></input>
+              style={{ ...Styles?.input, width: "50px" }}
+              onChange={() => {
+                changeQuantityPerPage();
+              }}
+              defaultValue={quantityPerPage}
+            >
+              <option>5</option>
+              <option>10</option>
+              <option>15</option>
+              <option>20</option>
+            </select>
           </div>
-          <button
-            style={{ ...Styles.bottonOnFocus }}
-            onClick={() => {
-              if (
-                inputRef.current.value?.length > 0 &&
-                Number(inputRef.current.value) > 0
-              ) {
-                setQuantityPerPage(Number(inputRef.current.value));
-                setCurrentNumberOfItems(Number(inputRef.current.value));
-                setStartingPoint(1);
-                setendPointMultiplicator(1);
-                setCurrentContent(
-                  allData.slice(0, Number(inputRef.current.value))
-                );
-              } else {
-                setFeedback("Enter valid number");
-              }
-            }}
-          >
-            Set
-          </button>
         </span>
         <span>
           {`${currentNumberOfItems - quantityPerPage + 1} - ${

@@ -48,7 +48,7 @@ const ListPagination = ({
     buttonsLabelsArray.push(i);
   }
 
-  const [pagesNavigation, setPagesNavigations] = useState({
+  const [pagesNavigation, setPagesNavigations] = useState<iPageNavigation>({
     all: buttonsLabelsArray.slice(
       startingPoint - 1,
       endPointMultiplicator * quantityPerPage

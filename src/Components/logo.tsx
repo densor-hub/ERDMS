@@ -1,7 +1,10 @@
 import React from "react";
 const Logo: React.FC = () => {
   return (
-    <main className="w-[60px] h-[60px] bg-transparent border-4 border-white border-r-0 rounded-full">
+    <main
+      data-testid="logo"
+      className="w-[60px] h-[60px] bg-transparent border-4 border-white border-r-0 rounded-full"
+    >
       <section className="relative left-[40%] top-[2px] py-1 pt-2 bg-slate-700 ">
         <LogoBars />
         <LogoBars />

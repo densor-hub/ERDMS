@@ -38,6 +38,7 @@ const Form = forwardRef(
       onSubmit,
       onCancel,
       formType,
+      buttonLabels,
     }: iForm,
     ref
   ) => {
@@ -544,12 +545,22 @@ const Form = forwardRef(
 
     //feedback
     useEffect(() => {
-      if (feedback) {
-        setTimeout(() => {
+      let feedbackTimeout: any;
+
+      const feedBackSetter = () => {
+        if (feedback) {
           setFeedback("");
-        }, 3000);
-      }
-    });
+        }
+      };
+
+      feedbackTimeout = setTimeout(() => {
+        feedBackSetter();
+      }, 3000);
+
+      return () => {
+        clearTimeout(feedbackTimeout);
+      };
+    }, [feedback]);
 
     return (
       <>
@@ -574,7 +585,7 @@ const Form = forwardRef(
 
           <div className="text-center text-red-500 relative bottom-4">
             <span style={{ visibility: "hidden" }}>.</span>
-            {feedback}
+            <span data-testid="feedback">{feedback}</span>
           </div>
           <section className="flex w-full">
             <form className="w-[400px]" style={Styles?.form}>
@@ -604,7 +615,10 @@ const Form = forwardRef(
                             </span>
                           </legend>
                         )}
-                        <label style={Styles?.row}>
+                        <label
+                          style={Styles?.row}
+                          htmlFor={element?.label?.toLowerCase()}
+                        >
                           {formType?.regular && (
                             <div
                               className="transition-all relative"
@@ -688,7 +702,13 @@ const Form = forwardRef(
 
               <div className="mt-5 h-[100px]">
                 <Button
-                  label={navigation?.next ? "Save" : "Submit"}
+                  label={
+                    navigation?.next
+                      ? "Save"
+                      : buttonLabels?.submit
+                      ? buttonLabels.submit
+                      : "Submit"
+                  }
                   onClick={(e: React.MouseEvent) => {
                     ON_SUBMIT(e);
                   }}
@@ -700,7 +720,13 @@ const Form = forwardRef(
                 />
 
                 <Button
-                  label={navigation?.previous ? "Back" : "Cancel"}
+                  label={
+                    navigation?.previous
+                      ? "Back"
+                      : buttonLabels?.reset
+                      ? buttonLabels?.reset
+                      : "Cancel"
+                  }
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     ON_CANCEL();

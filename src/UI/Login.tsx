@@ -96,6 +96,7 @@ const Login: React.FC = () => {
                   padding: "5px",
                 },
               }}
+              buttonLabels={{ submit: "Login", reset: "Cancel" }}
             />
           </div>
         </main>

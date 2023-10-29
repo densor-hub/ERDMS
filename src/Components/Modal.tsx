@@ -19,7 +19,10 @@ const Modal = ({
   Styles,
 }: iModal) => {
   return (
-    <main className="fixed top-0 left-0 right-0 bottom-0 min-h-screen w-screen  bg-[rgb(0,0,0,0.5)] text-white z-20 flex justify-center items-center">
+    <main
+      data-tesid="modal"
+      className="fixed top-0 left-0 right-0 bottom-0 min-h-screen w-screen  bg-[rgb(0,0,0,0.5)] text-white z-20 flex justify-center items-center"
+    >
       <div className="w-fit p-10 mx-auto border-2 border-slate-400 bg-[rgb(0,0,0,0.5)] rounded-lg">
         <table>
           <tbody>

@@ -151,4 +151,11 @@ export interface iForm {
   //customised cancel Function from developer
   onSubmit: Function;
   //customised submit Function from developer;
+
+  buttonLabels: iButtonLabel;
+}
+
+interface iButtonLabel {
+  submit?: string;
+  reset?: string;
 }

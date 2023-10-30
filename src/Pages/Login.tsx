@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../Components/logo.tsx";
 import Form from "../Components/Form.tsx";
-import { iFormDataObject } from "../Interfaces/Interfaces";
+import { iFormDataObject } from "../Interfaces/Interfaces.ts";
 
 const Login: React.FC = () => {
   //states

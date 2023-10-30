@@ -702,6 +702,7 @@ const Form = forwardRef(
 
               <div className="mt-5 h-[100px]">
                 <Button
+                  type="submit"
                   label={
                     navigation?.next
                       ? "Save"
@@ -720,6 +721,7 @@ const Form = forwardRef(
                 />
 
                 <Button
+                  type="reset"
                   label={
                     navigation?.previous
                       ? "Back"

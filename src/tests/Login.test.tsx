@@ -5,8 +5,9 @@ import {
   logDOM,
   logRoles,
   fireEvent,
+  waitFor,
 } from "@testing-library/react";
-import Login from "../UI/Login.tsx";
+import Login from "../Pages/Login.tsx";
 
 describe("Testing Login Page", () => {
   it("should render Logo", () => {
@@ -23,7 +24,7 @@ describe("Testing Login Page", () => {
     expect(name2OfApp).toBeInTheDocument();
   });
 
-  it("should have required fleildset for email/username required input ", () => {
+  it("should have required fleildset for email/username ", () => {
     render(<Login />);
     const emailOrUsernameFieldSet = screen.getByRole("group", {
       name: /email or username required/i,
@@ -31,38 +32,42 @@ describe("Testing Login Page", () => {
     expect(emailOrUsernameFieldSet).toBeInTheDocument();
   });
 
-  it("should have required fleildset for password required input ", () => {
+  it("should have required fleildset for password  ", () => {
     render(<Login />);
     const passwordFieldset = screen.getByRole("group", { name: /password/i });
     expect(passwordFieldset).toBeInTheDocument();
   });
 
-  it("should have email/username input with placeholder 'email or username'", () => {
+  it("should have required email/username input with placeholder 'email or username'", () => {
     render(<Login />);
     const emailOrUsernameInput =
       screen.getByPlaceholderText(/email or username/i);
     expect(emailOrUsernameInput).toBeInTheDocument();
+    expect(emailOrUsernameInput).toHaveProperty("required");
   });
 
-  it("should have password input with placeholder 'pasword'", () => {
+  it("should have required password input with placeholder 'pasword'", () => {
     render(<Login />);
     const passwordInput = screen.getByPlaceholderText(/password/i);
     expect(passwordInput).toBeInTheDocument();
+    expect(passwordInput).toHaveProperty("required");
   });
 
   it("should have a sumbit button inscriped 'login'", () => {
     render(<Login />);
     const loginButton = screen.getByRole("button", { name: /login/i });
     expect(loginButton).toBeInTheDocument();
+    expect(loginButton).toHaveProperty("type", "submit");
   });
 
   it("should have a reset button inscriped 'cancel'", () => {
     render(<Login />);
     const cancelButton = screen.getByRole("button", { name: /cancel/i });
     expect(cancelButton).toBeInTheDocument();
+    expect(cancelButton).toHaveProperty("type", "reset");
   });
 
-  it("should show feedback 'please enter all required fields' if any of the inputs are empty and login button is clicked", () => {
+  it("should show feedback 'please enter all required fields' if any of the inputs are empty whiles login button is clicked and clear feedback after 3 seconds", async () => {
     const container = render(<Login />);
     const nullfeedbackText = screen.queryByText(
       /please enter all required fields/i
@@ -80,6 +85,17 @@ describe("Testing Login Page", () => {
     fireEvent.click(loginButton);
     const feedbackText = screen.getByText(/please enter all required fields/i);
     expect(feedbackText).toBeInTheDocument();
+
+    //clearing feedbcak after 3 seconds
+    await waitFor(
+      () => {
+        const clearedFeedback = screen.queryByText(
+          /please enter all required fields/i
+        );
+        expect(clearedFeedback).not.toBeInTheDocument();
+      },
+      { timeout: 3100 }
+    );
   });
 
   it("should show Cancel Modal when Cancel button is clicked whiles there is value in Email/username input field", () => {

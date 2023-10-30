@@ -2,36 +2,36 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import React, { lazy, Suspense } from "react";
 import Root from "./customRoutes/PublicRoutes.jsx";
 import PrivateRoute from "./customRoutes/PrivateRoutes.jsx";
-import Loading from "./UI/Loading.tsx";
+import Loading from "./Pages/Loading.tsx";
 
 const Login = lazy(() => {
-  return import("./UI/Login.tsx");
+  return import("./Pages/Login.tsx");
 });
 const AddItem = lazy(() => {
-  return import("./UI/AddItem.tsx");
+  return import("./Pages/AddItem.tsx");
 });
 const AddAsset = lazy(() => {
-  return import("./UI/AddAsset.tsx");
+  return import("./Pages/AddAsset.tsx");
 });
 const AddStock = lazy(() => {
-  return import("./UI/AddStock.tsx");
+  return import("./Pages/AddStock.tsx");
 });
 const AddCustomer = lazy(() => {
-  return import("./UI/AddCustomer.tsx");
+  return import("./Pages/AddCustomer.tsx");
 });
 const AddSupplier = lazy(() => {
-  return import("./UI/AddSupplier.tsx");
+  return import("./Pages/AddSupplier.tsx");
 });
 const CreateBranch = lazy(() => {
-  return import("./UI/CreateBranch.tsx");
+  return import("./Pages/CreateBranch.tsx");
 });
 
 const PurchaseItem = lazy(() => {
-  return import("./UI/PurchaseItems.tsx");
+  return import("./Pages/PurchaseItems.tsx");
 });
 
 const AddEmployee = lazy(() => {
-  return import("./UI/AddEmployee.tsx");
+  return import("./Pages/AddEmployee.tsx");
 });
 
 const router = createBrowserRouter([

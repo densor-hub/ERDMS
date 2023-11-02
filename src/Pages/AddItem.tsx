@@ -3,28 +3,13 @@ import Form from "../Components/Form.tsx";
 import NavBar from "../Components/NavBar.tsx";
 import Menu from "../Components/Menu.tsx";
 import { iFormDataObject } from "../Interfaces/Interfaces.ts";
+import DefaultPage from "./DefaultPage.tsx";
 const AddItem = () => {
   const Submit = () => {};
   const Cancel = () => {};
 
-  //refs
-  const RequiredRefs = useRef([]);
-  const addToRequiredRefs = (element) => {
-    if (element && !RequiredRefs?.current?.includes(element)) {
-      RequiredRefs.current?.push(element);
-    }
-  };
-
   //feedbacks(error or success messages)
   const [feedback, setFeedback] = useState("");
-
-  //bools for validating input fields
-  const [bools, setBools] = useState({
-    itemName: false,
-    Asset_type: false,
-    Identification: false,
-    Description: false,
-  });
 
   const [formContent, setFormData] = useState<Array<iFormDataObject>>([
     {
@@ -87,24 +72,15 @@ const AddItem = () => {
     }
   });
   return (
-    <main className="overflow-x-hidden">
-      <section className="flex">
-        <Menu />
-
-        <section className="w-full">
-          <NavBar />
-          <div className="relative top-14 w-fit mx-auto">
-            <Form
-              formData={formContent}
-              setformData={setFormData}
-              onSubmit={Submit}
-              onCancel={Cancel}
-              formTitle={"Add Item"}
-            ></Form>
-          </div>
-        </section>
-      </section>
-    </main>
+    <DefaultPage>
+      <Form
+        formData={formContent}
+        setformData={setFormData}
+        onSubmit={Submit}
+        onCancel={Cancel}
+        formTitle={"Add Item"}
+      ></Form>
+    </DefaultPage>
   );
 };
 

@@ -37,20 +37,23 @@ const Modal = ({
             <tr>
               <td className="text-center py-2">
                 <Button
-                  label={"Yes"}
                   onClick={(e) => {
                     ActionFucntion();
                   }}
                   style={Styles?.button}
-                  // className="border-2 px-4 rounded-lg w-[80px] border-slate-700 hover:text-slate-700 hover:bg-slate-300 mx-1 bg-slate-500 text-white"
-                ></Button>
+                  type={"button"} // className="border-2 px-4 rounded-lg w-[80px] border-slate-700 hover:text-slate-700 hover:bg-slate-300 mx-1 bg-slate-500 text-white"
+                >
+                  {"Yes"}
+                </Button>
                 <Button
-                  label={"No"}
                   onClick={(e) => {
                     CancelFunction();
                   }}
                   style={Styles?.button}
-                ></Button>
+                  type={"button"}
+                >
+                  {"No"}
+                </Button>
               </td>
             </tr>
           </tbody>

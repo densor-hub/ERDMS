@@ -8,6 +8,7 @@ import { formatEmail, formatFullName } from "../Functions/FormatString.ts";
 import { isValidDate } from "../Functions/DateFunctions.ts";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { iFormDataObject } from "../Interfaces/Interfaces.ts";
+import DefaultPage from "./DefaultPage.tsx";
 
 const AddCustomer = () => {
   const [personalDetails, setPersonalDetails] = useState<
@@ -77,7 +78,7 @@ const AddCustomer = () => {
     },
   ]);
 
-  const [contactDetails, setContactDetails] = useState([
+  const [contactDetails, setContactDetails] = useState<Array<iFormDataObject>>([
     {
       label: "Phone",
       data: "",
@@ -87,7 +88,7 @@ const AddCustomer = () => {
         autoComplete: "off",
         placeholder: " Enter phone number",
       },
-      validCondintion: (phoneNumber) => {
+      validator: (phoneNumber: string) => {
         if (isValidPhoneNumber(phoneNumber)) {
           return true;
         } else {
@@ -104,7 +105,7 @@ const AddCustomer = () => {
         autoComplete: "off",
         placeholder: " Enter email address",
       },
-      validCondintion: (email) => {
+      validator: (email: string) => {
         if (formatEmail(email)) {
           return true;
         } else {
@@ -166,24 +167,13 @@ const AddCustomer = () => {
     },
   ];
   return (
-    <main className="flex w-full h-full overflow-x-hidden ">
-      <Menu />
-      <section className="w-full ">
-        <NavBar />
-        <section className="w-full flex h-screen min-h-[515px]">
-          <PageRightSide
-            appName={"CYNOSURE"}
-            actions={[{ label: "Add Customer" }]}
-          />
-
-          <AddPersonForm
-            content={content}
-            navigation={navigation.current}
-            formDataSetterFunctions={formDataSetterFunctions.current}
-          />
-        </section>
-      </section>
-    </main>
+    <DefaultPage>
+      <AddPersonForm
+        content={content}
+        navigation={navigation.current}
+        formDataSetterFunctions={formDataSetterFunctions.current}
+      />
+    </DefaultPage>
   );
 };
 

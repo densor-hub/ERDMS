@@ -109,9 +109,9 @@ export interface iForwaredByPhoneInput {
 export interface iFormSubComponent {
   formDataObject: iFormDataObject;
   ref?: any;
-  REF?: any;
+  REF?: (element: any) => void; //Function for addding to inputRefs
   Styles?: iStyles;
-  inputRefs?: MutableRefObject<Array<HTMLInputElement>>;
+  inputRefs?: HTMLInputElement[];
 }
 
 export interface iForm {
@@ -152,10 +152,10 @@ export interface iForm {
   onSubmit: Function;
   //customised submit Function from developer;
 
-  buttonLabels: iButtonLabel;
+  buttonLabels?: iFormButtonLabel;
 }
 
-interface iButtonLabel {
+interface iFormButtonLabel {
   submit?: string;
   reset?: string;
 }

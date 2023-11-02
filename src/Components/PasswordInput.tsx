@@ -19,7 +19,7 @@ const PasswordInput = React.forwardRef<
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  inputRefs.current.find((element) => {
+  inputRefs.find((element) => {
     return element.name.toLowerCase() === formDataObject.label.toLowerCase();
   });
 
@@ -52,7 +52,7 @@ const PasswordInput = React.forwardRef<
           onClick={(e) => {
             e.preventDefault();
             setShowPassword(true);
-            let specificInput = inputRefs.current?.find((element) => {
+            let specificInput = inputRefs?.find((element) => {
               return (
                 element?.name?.toLowerCase() ===
                 formDataObject?.label?.toLowerCase()
@@ -71,7 +71,7 @@ const PasswordInput = React.forwardRef<
           onClick={(e) => {
             e.preventDefault();
             setShowPassword(false);
-            let specificInput = inputRefs.current?.find((element) => {
+            let specificInput = inputRefs?.find((element) => {
               return (
                 element?.name?.toLowerCase() ===
                 formDataObject?.label?.toLowerCase()

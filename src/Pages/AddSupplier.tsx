@@ -11,6 +11,7 @@ import {
   iAddPersonContentObject,
   iFormDataObject,
 } from "../Interfaces/Interfaces.ts";
+import DefaultPage from "./DefaultPage.tsx";
 
 const AddSupplier = () => {
   const [personalDetails, setPersonalDetails] = useState<
@@ -80,7 +81,7 @@ const AddSupplier = () => {
     },
   ]);
 
-  const [contactDetails, setContactDetails] = useState([
+  const [contactDetails, setContactDetails] = useState<iFormDataObject[]>([
     {
       label: "Phone",
       data: "",
@@ -90,7 +91,7 @@ const AddSupplier = () => {
         autoComplete: "off",
         placeholder: " Enter phone number",
       },
-      validCondintion: (phoneNumber: string) => {
+      validator: (phoneNumber: string) => {
         if (isValidPhoneNumber(phoneNumber)) {
           return true;
         } else {
@@ -107,7 +108,7 @@ const AddSupplier = () => {
         autoComplete: "off",
         placeholder: " Enter email address",
       },
-      validCondintion: (email) => {
+      validator: (email: string) => {
         if (formatEmail(email)) {
           return true;
         } else {
@@ -137,7 +138,7 @@ const AddSupplier = () => {
     },
   ]);
 
-  const [companyDetails, setCompanyDetails] = useState([
+  const [companyDetails, setCompanyDetails] = useState<iFormDataObject[]>([
     {
       label: "Company name",
       data: "",
@@ -215,24 +216,13 @@ const AddSupplier = () => {
     },
   ];
   return (
-    <main className="flex w-full h-full overflow-x-hidden ">
-      <Menu />
-      <section className="w-full ">
-        <NavBar />
-        <section className="w-full flex h-screen min-h-[515px]">
-          <PageRightSide
-            appName={"CYNOSURE"}
-            actions={[{ label: "Add Supplier" }]}
-          />
-
-          <AddPersonForm
-            content={content}
-            navigation={navigation.current}
-            formDataSetterFunctions={formDataSetterFunctions.current}
-          />
-        </section>
-      </section>
-    </main>
+    <DefaultPage>
+      <AddPersonForm
+        content={content}
+        navigation={navigation.current}
+        formDataSetterFunctions={formDataSetterFunctions.current}
+      />
+    </DefaultPage>
   );
 };
 

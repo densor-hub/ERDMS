@@ -68,13 +68,14 @@ const AddPersonForm = ({
           <Profile profileData={finalEMploymentData} />
           <div className="flex">
             <Button
-              label={"Save"}
               onClick={() => {
                 console.log("I want to Save");
               }}
-            />
+              type={"button"}
+            >
+              {"Save"}
+            </Button>
             <Button
-              label={"Back"}
               onClick={() => {
                 setCurrentContent(
                   Object.values(navigation)[
@@ -82,7 +83,10 @@ const AddPersonForm = ({
                   ]
                 );
               }}
-            />
+              type={"button"}
+            >
+              {"Back"}
+            </Button>
           </div>
         </section>
       )}

@@ -3,13 +3,13 @@ import "../index.css";
 import React, { CSSProperties } from "react";
 
 interface iButton {
-  label: string;
+  children: any;
   onClick: React.MouseEventHandler;
   style?: CSSProperties;
   type: "button" | "submit" | "reset";
 }
 
-const Button = ({ label, onClick, style, type }: iButton) => {
+const Button = ({ onClick, style, type, children }: iButton) => {
   return (
     <button
       onClick={onClick}
@@ -18,7 +18,7 @@ const Button = ({ label, onClick, style, type }: iButton) => {
       type={type}
     >
       <div style={{ zIndex: 0 }} className="absolute w-full h-full abss"></div>
-      <div className="relative">{label}</div>
+      <div className="relative">{children}</div>
     </button>
   );
 };

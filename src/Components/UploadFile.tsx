@@ -11,7 +11,7 @@ interface iUploadFile {
   fallbackIcon: React.FC<any> | undefined;
   alt: string;
   onUpload: Function;
-  REF: any;
+  REF: (element: any) => void;
   allowedExtensions: string[] | undefined;
 }
 
@@ -86,7 +86,6 @@ const UploadFile = forwardRef(
         </section>
 
         <Button
-          label={"Upload"}
           onClick={(e: React.MouseEvent) => {
             e.preventDefault();
             uploadFileInputRef.current.value = "";
@@ -96,7 +95,10 @@ const UploadFile = forwardRef(
             fontSize: "small",
             padding: "1px 5px",
           }}
-        ></Button>
+          type={"button"}
+        >
+          {"Upload"}
+        </Button>
         <input
           ref={uploadFileInputRef}
           onClick={(e: any) => {

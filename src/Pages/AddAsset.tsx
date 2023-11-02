@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Form from "../Components/Form.tsx";
-import NavBar from "../Components/NavBar.tsx";
-import Menu from "../Components/Menu.tsx";
 import { iFormDataObject } from "../Interfaces/Interfaces.ts";
+import DefaultPage from "./DefaultPage.tsx";
 
 const AddAsset = () => {
   const [validatedData_FromForm, setValidatedData_FromForm] = useState({});
@@ -70,30 +69,20 @@ const AddAsset = () => {
     },
   ]);
 
-  console.log(validatedData_FromForm);
+  //console.log(validatedData_FromForm);
   const onFormCancel = () => {};
 
   const onFormSubmit = () => {};
   return (
-    <main className="overflow-x-hidden">
-      <section className="flex">
-        <Menu />
-
-        <section className="w-full">
-          <NavBar />
-          <div className="relative top-14 w-fit mx-auto">
-            <Form
-              formTitle={"Add Asset"}
-              formData={formData}
-              setformData={setformData}
-              onCancel={onFormCancel}
-              onSubmit={onFormSubmit}
-              // setValidatedData_FromForm={setValidatedData_FromForm}
-            ></Form>
-          </div>
-        </section>
-      </section>
-    </main>
+    <DefaultPage>
+      <Form
+        formTitle={"Add Asset"}
+        formData={formData}
+        setformData={setformData}
+        onCancel={onFormCancel}
+        onSubmit={onFormSubmit}
+      ></Form>
+    </DefaultPage>
   );
 };
 

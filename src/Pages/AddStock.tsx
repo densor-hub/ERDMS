@@ -3,21 +3,13 @@ import Form from "../Components/Form.tsx";
 import NavBar from "../Components/NavBar.tsx";
 import Menu from "../Components/Menu.tsx";
 import { iFormDataObject } from "../Interfaces/Interfaces.ts";
+import DefaultPage from "./DefaultPage.tsx";
 const AddStock = () => {
   const Submit = () => {};
   const Cancel = () => {};
 
-
   //feedbacks(error or success messages)
   const [feedback, setFeedback] = useState("");
-
-  //bools for validating input fields
-  const [bools, setBools] = useState({
-    itemName: false,
-    Quanitity: false,
-    Date: false,
-  });
-
   const [formContent, setformData] = useState<Array<iFormDataObject>>([
     {
       label: "Item name",
@@ -61,24 +53,15 @@ const AddStock = () => {
     }
   });
   return (
-    <main className="overflow-x-hidden">
-      <section className="flex">
-        <Menu />
-
-        <section className="w-full">
-          <NavBar />
-          <div className="relative top-14 w-fit mx-auto">
-            <Form
-              formData={formContent}
-              setformData={setformData}
-              onSubmit={Submit}
-              onCancel={Cancel}
-              formTitle={"Add Asset"}
-            ></Form>
-          </div>
-        </section>
-      </section>
-    </main>
+    <DefaultPage>
+      <Form
+        formData={formContent}
+        setformData={setformData}
+        onSubmit={Submit}
+        onCancel={Cancel}
+        formTitle={"Add Asset"}
+      ></Form>
+    </DefaultPage>
   );
 };
 

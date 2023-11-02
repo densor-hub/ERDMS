@@ -413,6 +413,11 @@ const Form = forwardRef(
     };
 
     const ON_CANCEL = () => {
+      console.log(
+        formData?.find((element) => {
+          return element?.data !== "";
+        })
+      );
       if (
         inputRefs.current?.find((element) => {
           return element.value?.length > 0;
@@ -489,6 +494,15 @@ const Form = forwardRef(
       } else {
         //if no previous
         clearInputs();
+
+        //clear data property in fromDataObject
+        formData?.forEach((item) => {
+          let ref = inputRefs.current?.find((ref) => {
+            return ref?.name?.toLowerCase() === item?.label?.toLowerCase();
+          });
+
+          item.data = "";
+        });
 
         if (formDataSetterFunctions?.length > 0) {
           formDataSetterFunctions.forEach((setterFunction) => {
@@ -579,9 +593,9 @@ const Form = forwardRef(
           />
         )}
         <main className="w-full max-w-[500px]  mx-auto">
-          <div className="uppercase font-bold  w-fit relative left-[35%] pb-4">
+          <h1 className="uppercase font-bold  w-fit relative left-[35%] pb-4 ">
             {formTitle}
-          </div>
+          </h1>
 
           <div className="text-center text-red-500 relative bottom-4">
             <span style={{ visibility: "hidden" }}>.</span>
@@ -668,6 +682,7 @@ const Form = forwardRef(
                               REF={addInputRefs}
                               formDataObject={element}
                               Styles={Styles}
+                              inputRefs={inputRefs.current}
                             />
                           ) : element?.input?.type === "tel" ? (
                             <PhoneNumer
@@ -689,7 +704,7 @@ const Form = forwardRef(
                               formDataObject={element}
                               REF={addInputRefs}
                               Styles={Styles}
-                              inputRefs={inputRefs}
+                              inputRefs={inputRefs.current}
                             />
                           ) : (
                             ""
@@ -703,13 +718,6 @@ const Form = forwardRef(
               <div className="mt-5 h-[100px]">
                 <Button
                   type="submit"
-                  label={
-                    navigation?.next
-                      ? "Save"
-                      : buttonLabels?.submit
-                      ? buttonLabels.submit
-                      : "Submit"
-                  }
                   onClick={(e: React.MouseEvent) => {
                     ON_SUBMIT(e);
                   }}
@@ -718,17 +726,16 @@ const Form = forwardRef(
                     marginRight: "10px",
                     ...Styles?.button,
                   }}
-                />
+                >
+                  {navigation?.next
+                    ? "Save"
+                    : buttonLabels?.submit
+                    ? buttonLabels.submit
+                    : "Submit"}
+                </Button>
 
                 <Button
                   type="reset"
-                  label={
-                    navigation?.previous
-                      ? "Back"
-                      : buttonLabels?.reset
-                      ? buttonLabels?.reset
-                      : "Cancel"
-                  }
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     ON_CANCEL();
@@ -738,7 +745,13 @@ const Form = forwardRef(
                     marginLeft: "10px",
                     ...Styles?.button,
                   }}
-                />
+                >
+                  {navigation?.previous
+                    ? "Back"
+                    : buttonLabels?.reset
+                    ? buttonLabels?.reset
+                    : "Cancel"}
+                </Button>
               </div>
             </form>
             {formData.map((element, index) => {

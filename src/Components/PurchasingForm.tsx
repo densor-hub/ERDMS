@@ -632,10 +632,17 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
         });
       }
     } else {
-      //ites already packs
+      //its already packs
       if (checkForOngoingOperation()) {
-        setPiecesformData((p) => {
-          return removeArrayItem(p, 1);
+        let indexOfItemToBeRemoved: number = PiecesformData.indexOf(
+          PiecesformData.find((element) => {
+            return (
+              element.label?.toLowerCase() === "Pcs in Packs"?.toLowerCase()
+            );
+          })
+        );
+        setPiecesformData((p: iFormDataObject[]) => {
+          return removeArrayItem(p, indexOfItemToBeRemoved);
         });
 
         setPurcahseDetails((p) => {
@@ -758,21 +765,22 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
                       setPurcahseDetails((p) => {
                         return { ...p, specificPurchase: purcahseType?.pieces };
                       });
-                      setPiecesformData((p) => {
-                        return removeArrayItem(
-                          p,
-                          1
 
-                          // p.indexOf(
-                          //   p.find((element) => {
-                          //     return (
-                          //       element.label?.toLowerCase() ===
-                          //       "Pcs in Packs"?.toLowerCase()
-                          //     );
-                          //   })
-                          // ),
-                        );
+                      let indexOfItemToBeRemoved = PiecesformData.indexOf(
+                        PiecesformData.find((element) => {
+                          return (
+                            element.label?.toLowerCase() ===
+                            "Pcs in Packs"?.toLowerCase()
+                          );
+                        })
+                      );
+                      setPiecesformData((p) => {
+                        return removeArrayItem(p, indexOfItemToBeRemoved);
                       });
+                      // setPiecesformData([
+                      //   ...PiecesformData.slice(0, indexOfItemToBeRemoved),
+                      //   ...PiecesformData.slice(indexOfItemToBeRemoved + 1),
+                      // ]);
                     }
                   }
                 },
@@ -849,6 +857,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
                     </div>
 
                     <Form
+                      ref={formRef}
                       formData={PiecesformData}
                       setformData={setPiecesformData}
                       onSubmit={OnFormSubmit}

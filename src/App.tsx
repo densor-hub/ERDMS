@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import React, { lazy, Suspense } from "react";
-import Root from "./customRoutes/PublicRoutes.jsx";
+import PublicRoute from "./customRoutes/PublicRoutes.jsx";
 import PrivateRoute from "./customRoutes/PrivateRoutes.jsx";
 import Loading from "./Pages/Loading.tsx";
 
@@ -35,7 +35,11 @@ const AddEmployee = lazy(() => {
 });
 
 const router = createBrowserRouter([
-  { path: "/", Component: Root, children: [{ index: true, Component: Login }] },
+  {
+    path: "/",
+    Component: PublicRoute,
+    children: [{ index: true, Component: Login }],
+  },
   {
     path: "/private",
     Component: PrivateRoute,
@@ -46,7 +50,7 @@ const router = createBrowserRouter([
       { path: "/private/add-customer", Component: AddCustomer },
       { path: "/private/add-supplier", Component: AddSupplier },
       { path: "/private/create-branch", Component: CreateBranch },
-      { path: "/private/purchase", Component: PurchaseItem },
+      { path: "/private/purchase-items", Component: PurchaseItem },
       { path: "/private/employ", Component: AddEmployee },
     ],
   },

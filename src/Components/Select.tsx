@@ -1,12 +1,17 @@
-import React, { useImperativeHandle, useState, useRef } from "react";
-import { useOutsideClicked } from "../Hooks/useOutSideClicked.jsx";
+import React, {
+  useImperativeHandle,
+  useState,
+  useRef,
+  useCallback,
+} from "react";
+import { useEffect } from "react";
 import {
   iFormSubComponent,
   iForwardedBySelect,
 } from "../Interfaces/Interfaces";
 
 const Select = React.forwardRef<iForwardedBySelect, iFormSubComponent>(
-  ({ formDataObject, REF }, ref) => {
+  ({ formDataObject, REF, inputRefs }, ref) => {
     useImperativeHandle(ref, () => {
       return {
         setSelectedValue: setSelectedItem,
@@ -16,8 +21,39 @@ const Select = React.forwardRef<iForwardedBySelect, iFormSubComponent>(
     const [showChildren, setShowChildren] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<any>(formDataObject?.data);
 
-    const selectItemFilterBoxRef = useRef<HTMLInputElement | null>(null);
-    useOutsideClicked(selectItemFilterBoxRef, setShowChildren, false, []);
+    const selectItemFilterBoxRef = useRef<HTMLSelectElement | null>(null);
+
+    const hideSelectOptions = useCallback(
+      (event: any) => {
+        let inputRef = inputRefs.find((element) => {
+          return (
+            formDataObject?.label.toLowerCase().trim() ===
+            element?.id.toLowerCase().trim()
+          );
+        });
+
+        if (
+          showChildren &&
+          selectItemFilterBoxRef.current &&
+          !selectItemFilterBoxRef.current?.contains(event.target) &&
+          !inputRef.contains(event.target)
+        ) {
+          setShowChildren(false);
+        }
+      },
+      [
+        showChildren,
+        selectItemFilterBoxRef.current,
+        inputRefs,
+        formDataObject?.label,
+      ]
+    );
+    useEffect(() => {
+      document.addEventListener("click", hideSelectOptions);
+      return () => {
+        document.removeEventListener("click", hideSelectOptions);
+      };
+    }, [hideSelectOptions]);
 
     return (
       <main className="relative  ">
@@ -44,15 +80,16 @@ const Select = React.forwardRef<iForwardedBySelect, iFormSubComponent>(
             setShowChildren(true);
           }}
           onChange={(e) => {
-            setShowChildren(true);
+            //  setShowChildren(true);
             setSelectedItem(e?.target?.value);
           }}
           value={selectedItem}
         ></input>
         {showChildren && (
           <section
-            className=" absolute w-full  z-10"
+            className=" absolute w-full  z-10 border-2 "
             ref={selectItemFilterBoxRef}
+            data-testid="select-options"
           >
             {formDataObject?.children?.map((child: any, index: number) => {
               return (
@@ -70,7 +107,6 @@ const Select = React.forwardRef<iForwardedBySelect, iFormSubComponent>(
                     onClick={(e) => {
                       e.preventDefault();
                       formDataObject.data = child;
-                      setShowChildren(false);
                       setSelectedItem(
                         child instanceof Object
                           ? `${child?.name ? child?.name : ""} ${
@@ -78,6 +114,7 @@ const Select = React.forwardRef<iForwardedBySelect, iFormSubComponent>(
                             } ${child?.size ? child?.size : ""}`
                           : child
                       );
+                      setShowChildren(false);
                     }}
                   >
                     {child instanceof Object

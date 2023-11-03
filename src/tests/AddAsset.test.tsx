@@ -1,14 +1,7 @@
 import React from "react";
 import AddAsset from "../Pages/AddAsset.tsx";
 import { BrowserRouter } from "react-router-dom";
-import {
-  render,
-  screen,
-  logDOM,
-  logRoles,
-  fireEvent,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 describe("Testing Add-Asset component", () => {
   it("should have a heading 'Add Asset'", () => {

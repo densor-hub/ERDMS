@@ -47,7 +47,7 @@ const AddAsset = () => {
         type: "text",
         required: true,
         autoComplete: "off",
-        placeholder: " Car , House or Serial Number",
+        placeholder: " Unique Identification",
       },
       validator: (id: string) => {
         if (id.length > 0) {

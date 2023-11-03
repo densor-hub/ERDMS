@@ -580,7 +580,7 @@ const Form = forwardRef(
       <>
         {bools?.showCancelModal && (
           <Modal
-            EffectNotice={"You will lose current operation."}
+            EffectNotice={"You will lose current operation"}
             ActionInOneWord="Cancel"
             CancelInOneWord="Go back"
             ActionFucntion={cancelOperation}

@@ -28,9 +28,8 @@ const Modal = ({
           <tbody>
             <tr>
               <td>
-                <span>{EffectNotice}</span>
-                <br />
-                <span>Do you still want to {ActionInOneWord}? </span>
+                <p>{EffectNotice}</p>
+                <p>Do you still want to {ActionInOneWord}? </p>
               </td>
             </tr>
 

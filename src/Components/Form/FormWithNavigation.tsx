@@ -1,30 +1,31 @@
 import React, { useState } from "react";
-import Form from "./Form.tsx";
-import ProgresBar from "./ProgressBar.tsx";
-import Profile from "./Profile.tsx";
-import Button from "./Button.tsx";
-import { iAddPerson } from "../Interfaces/Interfaces.ts";
+import FieldsetForm from "./FieldsetForm.tsx";
+import ProgresBar from "../ProgressBar.tsx";
+import Profile from "../Profile.tsx";
+import Button from "../Button.tsx";
+import { iFormWithNavigation } from "../../Interfaces/Interfaces.ts";
 
-const AddPersonForm = ({
+const FormWithNavigation = ({
   content,
   navigation,
   formDataSetterFunctions,
-}: iAddPerson) => {
+  Styles
+}: iFormWithNavigation) => {
   const [currentContent, setCurrentContent] = useState<any>(
     Object?.values(navigation)[0]
   );
 
-  const [finalEMploymentData, setFinalEmploymentData] = useState({});
+  const [finalData, setFinalData] = useState({});
 
   const onDetailsSubmit = (ValidatedData_FromForm: any) => {
-    setFinalEmploymentData({
-      ...finalEMploymentData,
+    setFinalData({
+      ...finalData,
       ...ValidatedData_FromForm,
     });
   };
 
   const cancelEmployment = () => {
-    setFinalEmploymentData({});
+    setFinalData({});
   };
   return (
     <main className="w-full ">
@@ -33,13 +34,13 @@ const AddPersonForm = ({
         currentContent={currentContent}
       />
       {content?.length > 0 &&
-      currentContent !==
+        currentContent !==
         Object?.values(navigation)[Object?.values(navigation)?.length - 1] ? (
         content?.map((contents, index: number) => {
           return (
             contents?.title?.trim()?.toLowerCase() ===
-              currentContent?.trim()?.toLowerCase() && (
-              <Form
+            currentContent?.trim()?.toLowerCase() && (
+              <FieldsetForm
                 key={index}
                 formTitle={contents?.title}
                 formData={contents?.formData}
@@ -47,16 +48,7 @@ const AddPersonForm = ({
                 formDataSetterFunctions={formDataSetterFunctions}
                 navigation={contents?.navigation}
                 setCurrentContent={setCurrentContent}
-                Styles={{
-                  input: { marginBottom: "8px" },
-                  label: { fontWeight: "450" },
-                  button: {
-                    padding: "5px",
-                    marginLeft: "5px",
-                    border: "2px solid #94a3b8",
-                    minWidth: "100px",
-                  },
-                }}
+                Styles={Styles}
                 onSubmit={onDetailsSubmit}
                 onCancel={cancelEmployment}
               />
@@ -65,7 +57,7 @@ const AddPersonForm = ({
         })
       ) : (
         <section>
-          <Profile profileData={finalEMploymentData} />
+          <Profile profileData={finalData} />
           <div className="flex">
             <Button
               onClick={() => {
@@ -79,7 +71,7 @@ const AddPersonForm = ({
               onClick={() => {
                 setCurrentContent(
                   Object.values(navigation)[
-                    Object.values(navigation).length - 2
+                  Object.values(navigation).length - 2
                   ]
                 );
               }}
@@ -94,4 +86,4 @@ const AddPersonForm = ({
   );
 };
 
-export default AddPersonForm;
+export default FormWithNavigation;

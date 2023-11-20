@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import Button from "./Button.tsx";
+import Button from "../../Button.tsx";
 
 interface iUploadFile {
   fallbackIcon: React.FC<any> | undefined;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../Components/logo.tsx";
-import Form from "../Components/Form.tsx";
+import FieldsetForm from "../Components/Form/FieldsetForm.tsx";
 import { iFormDataObject } from "../Interfaces/Interfaces.ts";
 
 const Login: React.FC = () => {
@@ -31,7 +31,7 @@ const Login: React.FC = () => {
 
   //refs
 
-  const onCancel: Function = () => {};
+  const onCancel: Function = () => { };
 
   const SignIn: Function = (data: any) => {
     console.log(data);
@@ -54,7 +54,7 @@ const Login: React.FC = () => {
       </section>
 
       <section className="relative h-screen w-screen flex justify-center flex-col text-center ">
-        <main className="mx-auto w-60">
+        <main className="mx-auto">
           <div className="flex justify-center pb-5">{<Logo />}</div>
           <div className="uppercase pb-8 ">
             <span className="text-white font-semibold text-xl tracking-wide">
@@ -65,12 +65,12 @@ const Login: React.FC = () => {
               S U R E{" "}
             </span>
           </div>
-          <div>
+          <div >
             <div className="text-center text-red-500 pb-2">
               <span style={{ visibility: "hidden" }}>.</span>
               {feedback}
             </div>
-            <Form
+            <FieldsetForm
               formData={formData}
               setformData={setFormData}
               onCancel={onCancel}
@@ -78,7 +78,6 @@ const Login: React.FC = () => {
               Styles={{
                 input: {
                   color: "white",
-                  marginBottom: "10px",
                 },
                 label: {
                   color: "white",
@@ -87,7 +86,6 @@ const Login: React.FC = () => {
                   position: "relative",
                   bottom: "2px",
                 },
-
                 button: {
                   border: "2px solid #ca8a04",
                   backgroundColor: "#a16207",
@@ -95,6 +93,9 @@ const Login: React.FC = () => {
                   marginLeft: "5px",
                   padding: "5px",
                 },
+                form: {
+                  width: "350px",
+                }
               }}
               buttonLabels={{ submit: "Login", reset: "Cancel" }}
             />

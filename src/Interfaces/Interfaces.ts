@@ -1,12 +1,13 @@
-import { CSSProperties, ChangeEventHandler, MutableRefObject } from "react";
+import { CSSProperties } from "react";
 
-export interface iAddPerson {
+export interface iFormWithNavigation {
   formDataSetterFunctions?: Array<Function>;
   navigation?: any;
-  content?: Array<iAddPersonContentObject>;
+  content?: Array<iFormWithNavigationContentObject>;
+  Styles?: iStyles
 }
 
-export interface iAddPersonContentObject {
+export interface iFormWithNavigationContentObject {
   title?: string;
   navigation?: iNavigation;
   setformData?: Function;
@@ -112,8 +113,12 @@ export interface iFormSubComponent {
   REF?: (element: any) => void; //Function for addding to inputRefs
   Styles?: iStyles;
   inputRefs?: HTMLInputElement[];
+  formType?: iFormType
 }
 
+export interface iFormType {
+  regular: boolean
+}
 export interface iForm {
   formTitle?: String;
   //string that represenst the title of the form

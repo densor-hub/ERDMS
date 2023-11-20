@@ -1,18 +1,27 @@
-import MenuChild from "./MenuChild.tsx";
-import MenuGrandChildren from "./MenuGrandChildren.tsx";
+import React from "react";
+import MenuWithSideBar from "../Components/Menu/MenuWithSideBar.tsx";
+import PageRightSide from "../Components/PageRightSide.tsx";
+import NavBar from "../Components/NavBar.tsx";
+import { iMenucontentContainer } from "../Interfaces/Interfaces.ts";
 import { AiOutlineSetting } from "react-icons/ai";
 import { MdOutlineInventory } from "react-icons/md";
 import { PiUsersThreeDuotone } from "react-icons/pi";
 import { BsCart4, BsCashCoin } from "react-icons/bs";
 import { BiCartDownload } from "react-icons/bi";
 import { GiTakeMyMoney } from "react-icons/gi";
-import { useState, useRef } from "react";
-import { useOutsideClicked } from "../Hooks/useOutSideClicked";
-import React from "react";
-import { iMenucontentContainer } from "../Interfaces/Interfaces";
 
-const Menu = () => {
-  const content: Array<iMenucontentContainer> = [
+const CynosureLayout = ({ children, hideNavigationNextToMenu }: any) => {
+  const headers = [
+    { label: "Asset", icon: BsCashCoin },
+    { label: "Stocks", icon: MdOutlineInventory },
+    { label: "Sales", icon: BsCart4 },
+    { label: "Financing", icon: GiTakeMyMoney },
+    { label: "Procurement", icon: BiCartDownload },
+    { label: "Configure", icon: AiOutlineSetting },
+    { label: "Human relation", icon: PiUsersThreeDuotone },
+  ];
+
+  const sideBarContent: Array<iMenucontentContainer> = [
     {
       id: "Asset",
       content: [{ title: "Add asset" }, { title: "View assets" }],
@@ -92,57 +101,21 @@ const Menu = () => {
       ],
     },
   ];
-
-  const [currentContent, setCurrentContent] =
-    useState<iMenucontentContainer | null>(null);
-  const MenuRef = useRef();
-
-  //onclick function passed to MenuChild to set current MenuContent to be displayed
-  const onClick = (content: iMenucontentContainer) => {
-    setCurrentContent(content);
-  };
-
-  //when outside of Menu is Clicked
-  useOutsideClicked(MenuRef, setCurrentContent, [], [currentContent]);
-
-  const MenuItems = [
-    { label: "Asset", icon: BsCashCoin },
-    { label: "Stocks", icon: MdOutlineInventory },
-    { label: "Sales", icon: BsCart4 },
-    { label: "Financing", icon: GiTakeMyMoney },
-    { label: "Procurement", icon: BiCartDownload },
-    { label: "Configure", icon: AiOutlineSetting },
-    { label: "Human relation", icon: PiUsersThreeDuotone },
-  ];
-
   return (
-    <main className={"flex w-fit"} ref={MenuRef}>
-      <section className="w-32 min-h-screen  bg-slate-700 ">
-        {MenuItems?.map((elements, index) => {
-          return (
-            <MenuChild
-              key={index}
-              label={elements?.label}
-              onClick={onClick}
-              content={content}
-              currentContent={currentContent}
-              icon={elements.icon}
-            />
-          );
-        })}
-      </section>
-
-      <section
-        className={
-          currentContent?.content?.length > 0
-            ? "relative right-10 w-60 translate-x-10 transition-transform duration-100 ease-in"
-            : " relative left-10  transition-transform duration-[1s] "
-        }
-      >
-        <MenuGrandChildren currentContent={currentContent} />
+    <main className="flex w-full  overflow-hidden h-screen min-h-[560px]" >
+      <MenuWithSideBar headers={headers} sideBarContent={sideBarContent} />
+      <section className="w-full h-full">
+        <NavBar />
+        <section className="w-full flex h-full" >
+          {!hideNavigationNextToMenu && <PageRightSide
+            appName={"CYNOSURE"}
+            actions={[{ label: "Employement" }]}
+          />}
+          {children}
+        </section>
       </section>
     </main>
   );
 };
 
-export default Menu;
+export default CynosureLayout;

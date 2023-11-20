@@ -1,6 +1,6 @@
-import Menu from "../Components/Menu.tsx";
+import Menu from "../Components/Menu/MenuWithSideBar.tsx";
 import NavBar from "../Components/NavBar.tsx";
-import AddPersonForm from "../Components/AddPersonForm.tsx";
+import AddPersonForm from "../Components/Form/FormWithNavigation.tsx";
 import PageRightSide from "../Components/PageRightSide.tsx";
 import React, { useState, useRef } from "react";
 import { FaUser } from "react-icons/fa";
@@ -8,10 +8,10 @@ import { formatEmail, formatFullName } from "../Functions/FormatString.ts";
 import { isValidDate } from "../Functions/DateFunctions.ts";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import {
-  iAddPersonContentObject,
+  iFormWithNavigationContentObject,
   iFormDataObject,
 } from "../Interfaces/Interfaces.ts";
-import DefaultPage from "./DefaultPage.tsx";
+import DefaultPage from "../Layouts/CynosureLayout.tsx";
 
 const AddSupplier = () => {
   const [personalDetails, setPersonalDetails] = useState<
@@ -184,7 +184,7 @@ const AddSupplier = () => {
     preview: "preview",
   });
 
-  const content: iAddPersonContentObject[] = [
+  const content: iFormWithNavigationContentObject[] = [
     {
       title: navigation?.current?.generalDetails,
       formData: personalDetails,

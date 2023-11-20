@@ -1,6 +1,6 @@
-import Menu from "../Components/Menu.tsx";
+import Menu from "../Components/Menu/MenuWithSideBar.tsx";
 import NavBar from "../Components/NavBar.tsx";
-import AddPersonForm from "../Components/AddPersonForm.tsx";
+import FormWithNavigation from "../Components/Form/FormWithNavigation.tsx";
 import PageRightSide from "../Components/PageRightSide.tsx";
 import React, { useState, useRef } from "react";
 import { FaUser } from "react-icons/fa";
@@ -8,7 +8,7 @@ import { formatEmail, formatFullName } from "../Functions/FormatString.ts";
 import { isValidDate } from "../Functions/DateFunctions.ts";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { iFormDataObject } from "../Interfaces/Interfaces.ts";
-import DefaultPage from "./DefaultPage.tsx";
+import CynosureLayout from "../Layouts/CynosureLayout.tsx";
 
 const AddEmployee = () => {
   const [personalDetails, setPersonalDetails] = useState<
@@ -186,7 +186,7 @@ const AddEmployee = () => {
   ]);
 
   const navigation = useRef({
-    generalDetails: "general details",
+    generalDetails: "basic details",
     contactDetails: "contact details",
     employmentDetails: "employment details",
     preview: "preview",
@@ -224,13 +224,24 @@ const AddEmployee = () => {
     },
   ];
   return (
-    <DefaultPage>
-      <AddPersonForm
+    <CynosureLayout>
+      <FormWithNavigation
         content={content}
         navigation={navigation.current}
         formDataSetterFunctions={formDataSetterFunctions.current}
+        Styles={{
+          input: { marginBottom: "8px", },
+          label: { fontWeight: "450", },
+          form: { width: "300px" },
+          button: {
+            padding: "5px",
+            marginLeft: "5px",
+            border: "2px solid #94a3b8",
+            minWidth: "100px",
+          },
+        }}
       />
-    </DefaultPage>
+    </CynosureLayout>
   );
 };
 

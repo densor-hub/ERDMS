@@ -6,14 +6,14 @@ import React, {
   useEffect,
 } from "react";
 import { isValidPhoneNumber, parsePhoneNumber } from "react-phone-number-input";
-import { replaceWhiteSpaceWithDash } from "../Functions/FormatString.ts";
-import UploadFile from "./UploadFile.tsx";
-import Modal from "./Modal.tsx";
-import Button from "./Button.tsx";
-import Select from "./Select.tsx";
-import Radio from "./Radio.tsx";
-import PhoneNumer from "./PhoneInput.tsx";
-import Password from "./PasswordInput.tsx";
+import { replaceWhiteSpaceWithDash } from "../../Functions/FormatString.ts";
+import UploadFile from "./Sub-components/UploadFile.tsx";
+import Modal from "../Modal.tsx";
+import Button from "../Button.tsx";
+import Select from "./Sub-components/Select.tsx";
+import Radio from "./Sub-components/Radio.tsx";
+import PhoneNumer from "./Sub-components/PhoneInput.tsx";
+import Password from "./Sub-components/PasswordInput.tsx";
 
 import {
   iForm,
@@ -23,9 +23,9 @@ import {
   iForwaredByRadio,
   iForwardedByPasswordInput,
   iForwaredByPhoneInput,
-} from "../Interfaces/Interfaces.ts";
+} from "../../Interfaces/Interfaces.ts";
 
-const Form = forwardRef(
+const FieldsetForm = forwardRef(
   (
     {
       formTitle,
@@ -581,7 +581,7 @@ const Form = forwardRef(
         {bools?.showCancelModal && (
           <Modal
             EffectNotice={"You will lose current operation"}
-            ActionInOneWord="Cancel"
+            ActionInOneWord="cancel"
             CancelInOneWord="Go back"
             ActionFucntion={cancelOperation}
             CancelFunction={() =>
@@ -592,17 +592,19 @@ const Form = forwardRef(
             Styles={Styles}
           />
         )}
-        <main className="w-full max-w-[500px]  mx-auto">
-          <h1 className="uppercase font-bold  w-fit relative left-[35%] pb-4 ">
-            {formTitle}
-          </h1>
+        <main className="w-fit mx-auto h-fit" >
 
+          <h3 className="uppercase  w-fit relative left-[35%] pb-4 ">
+            {formTitle}
+          </h3>
           <div className="text-center text-red-500 relative bottom-4">
             <span style={{ visibility: "hidden" }}>.</span>
             <span data-testid="feedback">{feedback}</span>
           </div>
-          <section className="flex w-full">
-            <form className="w-[400px]" style={Styles?.form}>
+
+          <section className="flex justify-center items-center ">
+
+            <form style={{ ...Styles?.form }}>
               {formData?.length > 0 &&
                 formData.map((element, index) => {
                   return (
@@ -613,55 +615,42 @@ const Form = forwardRef(
                         ref={addToFielSetRefs}
                         style={Styles?.input}
                       >
-                        {!formType?.regular && (
-                          <legend
-                            className="text-[12px] text-yellow-700 "
-                            style={{ ...Styles?.label }}
-                          >
-                            {element?.label}{" "}
-                            <span className="text-xs relative top-[25%]">
-                              {element?.input?.required && (
-                                <i className="text-[11px] text-slate-400 relative bottom-[1px]">
-                                  required
-                                </i>
-                              )}
-                              <span style={{ visibility: "hidden" }}> *</span>
-                            </span>
-                          </legend>
-                        )}
+                        <legend
+                          className="text-[12px] text-yellow-700 "
+                          style={{ ...Styles?.label, }}
+                        >
+                          {element?.label}{" "}
+                          <span className="text-xs relative top-[25%]">
+                            {element?.input?.required && (
+                              <i className="text-[11px] text-slate-400 relative bottom-[1px]">
+                                required
+                              </i>
+                            )}
+                            <span style={{ visibility: "hidden" }}> *</span>
+                          </span>
+                        </legend>
+
                         <label
                           style={Styles?.row}
                           htmlFor={element?.label?.toLowerCase()}
                         >
-                          {formType?.regular && (
-                            <div
-                              className="transition-all relative"
-                              style={Styles?.label}
-                            >
-                              {element?.label}{" "}
-                              <span className="text-xs absolute right-0 top-[50%] translate-y-[-50%]">
-                                {element?.input?.required && " *"}
-                              </span>{" "}
-                            </div>
-                          )}
-
                           {element?.input?.type === "text" ||
-                          element?.input?.type === "textarea" ||
-                          element?.input?.type === "email" ||
-                          element?.input?.type === "number" ||
-                          element?.input?.type === "date" ||
-                          element?.input?.type === "checkbox" ||
-                          element?.input?.type === "date-time" ? (
+                            element?.input?.type === "textarea" ||
+                            element?.input?.type === "email" ||
+                            element?.input?.type === "number" ||
+                            element?.input?.type === "date" ||
+                            element?.input?.type === "checkbox" ||
+                            element?.input?.type === "date-time" ? (
                             <input
                               style={{
                                 padding: "0px",
                                 margin: "0px",
-                                border: "0px",
                                 outline: "none",
                                 width: "calc(100% - 10px)",
                                 position: "relative",
                                 left: "5px",
                                 backgroundColor: "transparent",
+
                               }}
                               {...element?.input}
                               id={element?.label?.toLowerCase()}
@@ -673,7 +662,7 @@ const Form = forwardRef(
                               name={element?.label.toLowerCase()}
                               ref={addInputRefs}
                               defaultValue={element?.data}
-                              onFocus={() => {}}
+                              onFocus={() => { }}
                             ></input>
                           ) : element?.input?.type?.trim()?.toLowerCase() ===
                             "select" ? (
@@ -715,7 +704,7 @@ const Form = forwardRef(
                   );
                 })}
 
-              <div className="mt-5 h-[100px]">
+              <div className="mt-5 ">
                 <Button
                   type="submit"
                   onClick={(e: React.MouseEvent) => {
@@ -728,10 +717,10 @@ const Form = forwardRef(
                   }}
                 >
                   {navigation?.next
-                    ? "Save"
+                    ? "Next"
                     : buttonLabels?.submit
-                    ? buttonLabels.submit
-                    : "Submit"}
+                      ? buttonLabels.submit
+                      : "Submit"}
                 </Button>
 
                 <Button
@@ -749,28 +738,30 @@ const Form = forwardRef(
                   {navigation?.previous
                     ? "Back"
                     : buttonLabels?.reset
-                    ? buttonLabels?.reset
-                    : "Cancel"}
+                      ? buttonLabels?.reset
+                      : "Cancel"}
                 </Button>
               </div>
             </form>
-            {formData.map((element, index) => {
-              const Icon = element?.input?.icon;
-              return (
-                element?.input?.type === "file" && (
-                  <div className="relative h-fit top-10" key={index}>
-                    <UploadFile
-                      ref={addToSetFileFxnRefs}
-                      onUpload={onFileUpload}
-                      REF={addInputRefs}
-                      fallbackIcon={Icon}
-                      alt={element?.label}
-                      allowedExtensions={element?.input?.allowedExtensions}
-                    />
-                  </div>
-                )
-              );
-            })}
+            <section className="relative bottom-[11%]" style={{ height: "100%" }}>
+              {formData.map((element, index) => {
+                const Icon = element?.input?.icon;
+                return (
+                  element?.input?.type === "file" && (
+                    <div className="relative h-fit " key={index}>
+                      <UploadFile
+                        ref={addToSetFileFxnRefs}
+                        onUpload={onFileUpload}
+                        REF={addInputRefs}
+                        fallbackIcon={Icon}
+                        alt={element?.label}
+                        allowedExtensions={element?.input?.allowedExtensions}
+                      />
+                    </div>
+                  )
+                );
+              })}
+            </section>
           </section>
         </main>
       </>
@@ -778,7 +769,7 @@ const Form = forwardRef(
   }
 );
 
-export default Form;
+export default FieldsetForm;
 
 /// Additional Docs
 /// The setter fuctions of all subComponents are forwared to this form via forward ref.

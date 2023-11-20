@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import Form from "../Components/Form.tsx";
+import Form from "../Components/Form/FieldsetForm.tsx";
 import NavBar from "../Components/NavBar.tsx";
-import Menu from "../Components/Menu.tsx";
+import Menu from "../Components/Menu/MenuWithSideBar.tsx";
 import { iFormDataObject } from "../Interfaces/Interfaces.ts";
-import DefaultPage from "./DefaultPage.tsx";
+import DefaultPage from "../Layouts/CynosureLayout.tsx";
 
 const CreateBranch: React.FC = () => {
-  const Submit: Function = () => {};
-  const Cancel: Function = () => {};
+  const Submit: Function = () => { };
+  const Cancel: Function = () => { };
 
   //feedbacks(error or success messages)
   const [feedback, setFeedback] = useState<string>("");

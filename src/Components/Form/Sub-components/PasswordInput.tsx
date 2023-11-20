@@ -7,7 +7,7 @@ import React, {
 import {
   iFormSubComponent,
   iForwardedByPasswordInput,
-} from "../Interfaces/Interfaces";
+} from "../../../Interfaces/Interfaces";
 
 const PasswordInput = React.forwardRef<
   iForwardedByPasswordInput,

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineRight } from "react-icons/ai";
-import { createPathname } from "../Functions/FormatString.ts";
+import { createPathname } from "../../../Functions/FormatString.ts";
 import React from "react";
 import {
   iMenucontenChildrenObject,
   iMenucontentObject,
-} from "../Interfaces/Interfaces.js";
+} from "../../../Interfaces/Interfaces.js";
 
 const MenuGrandChildren = ({ currentContent }) => {
   //current content from Menu in UI

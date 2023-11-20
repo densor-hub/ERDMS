@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import { iMenucontentContainer } from "../Interfaces/Interfaces";
+import { iMenucontentContainer } from "../../../Interfaces/Interfaces";
 
 interface iMenuChild {
   key: number | string;

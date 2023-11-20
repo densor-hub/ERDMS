@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import {
   iFormSubComponent,
   iForwaredByPhoneInput,
-} from "../Interfaces/Interfaces";
+} from "../../../Interfaces/Interfaces";
 import React from "react";
 import { useImperativeHandle } from "react";
 

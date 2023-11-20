@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Form from "../Components/Form.tsx";
+import FieldsetForm from "../Components/Form/FieldsetForm.tsx";
 import { iFormDataObject } from "../Interfaces/Interfaces.ts";
-import DefaultPage from "./DefaultPage.tsx";
+import CynosureLayout from "../Layouts/CynosureLayout.tsx";
 
 const AddAsset = () => {
   const [validatedData_FromForm, setValidatedData_FromForm] = useState({});
@@ -70,19 +70,20 @@ const AddAsset = () => {
   ]);
 
   //console.log(validatedData_FromForm);
-  const onFormCancel = () => {};
+  const onFormCancel = () => { };
 
-  const onFormSubmit = () => {};
+  const onFormSubmit = () => { };
   return (
-    <DefaultPage>
-      <Form
+    <CynosureLayout>
+      <FieldsetForm
         formTitle={"Add Asset"}
         formData={formData}
         setformData={setformData}
         onCancel={onFormCancel}
         onSubmit={onFormSubmit}
-      ></Form>
-    </DefaultPage>
+        Styles={{ form: { minWidth: "300px" } }}
+      ></FieldsetForm>
+    </CynosureLayout>
   );
 };
 

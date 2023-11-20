@@ -6,15 +6,16 @@ import List from "./List.tsx";
 import PageRightSide from "./PageRightSide.tsx";
 
 import "../index.css";
-import Form from "./Form.tsx";
+import RegularForm from "./Form/RegularForm.tsx";
 import {
   insertArrayItem,
   removeArrayItem,
 } from "../Functions/FormatArraysAndObjects.ts";
+import { convertToCurrency } from "../Functions/FormatString.ts";
 import { iFormDataObject } from "../Interfaces/Interfaces.ts";
 
 const PurchaseForm = ({ TypeOfPurchase }) => {
-  const ConvertNANtoZero = (data) => {
+  const ConvertNANtoZero = (data: any) => {
     if (!Number(data)) {
       return 0;
     } else {
@@ -467,7 +468,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
               type: "select",
               required: true,
               autoComplete: "off",
-              placeholder: "Select Supplier",
+              placeholder: "Select supplier",
             },
             validCondintion: (itemanme) => {
               if (itemanme.length > 0) {
@@ -487,8 +488,8 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
               autoComplete: "off",
               placeholder: "Select Supplier",
             },
-            validCondintion: (itemanme) => {
-              if (itemanme.length > 0) {
+            validCondintion: (supplier: string) => {
+              if (supplier.length > 0) {
                 return true;
               } else {
                 return false;
@@ -499,6 +500,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
       });
     }
   };
+
   const OnFormSubmit = (ValidatedData_FromForm) => {
     let piecesInPacks;
     if (ConvertNANtoZero(ValidatedData_FromForm?.pcs_in_packs) > 0) {
@@ -508,19 +510,16 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
     }
     const itemObject = {
       id: ValidatedData_FromForm?.item?.id,
-      name: `${
-        ValidatedData_FromForm?.item?.name
-          ? ValidatedData_FromForm?.item?.name
-          : ""
-      } ${
-        ValidatedData_FromForm?.item?.type
+      name: `${ValidatedData_FromForm?.item?.name
+        ? ValidatedData_FromForm?.item?.name
+        : ""
+        } ${ValidatedData_FromForm?.item?.type
           ? ValidatedData_FromForm?.item?.type
           : ""
-      } ${
-        ValidatedData_FromForm?.item?.size
+        } ${ValidatedData_FromForm?.item?.size
           ? ValidatedData_FromForm?.item?.size
           : ""
-      }`,
+        }`,
       quantity: ValidatedData_FromForm?.quantity,
       price: ValidatedData_FromForm?.unit_price,
       addons: ConvertNANtoZero(ValidatedData_FromForm?.addons),
@@ -533,16 +532,16 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
       total_cost: parseFloat(
         String(
           ConvertNANtoZero(ValidatedData_FromForm?.quantity) *
-            ConvertNANtoZero(ValidatedData_FromForm?.unit_price) -
-            ConvertNANtoZero(ValidatedData_FromForm?.discount) *
-              ConvertNANtoZero(ValidatedData_FromForm?.quantity) +
-            ConvertNANtoZero(ValidatedData_FromForm?.vat) *
-              ConvertNANtoZero(ValidatedData_FromForm?.quantity)
+          ConvertNANtoZero(ValidatedData_FromForm?.unit_price) -
+          ConvertNANtoZero(ValidatedData_FromForm?.discount) *
+          ConvertNANtoZero(ValidatedData_FromForm?.quantity) +
+          ConvertNANtoZero(ValidatedData_FromForm?.vat) *
+          ConvertNANtoZero(ValidatedData_FromForm?.quantity)
         )
       ).toFixed(2),
       totalpieces:
         ConvertNANtoZero(ValidatedData_FromForm?.quantity) *
-          ConvertNANtoZero(piecesInPacks) +
+        ConvertNANtoZero(piecesInPacks) +
         ConvertNANtoZero(ValidatedData_FromForm?.addons),
       dateInNumers: CovertMonthNumbersToAlphabets(ValidatedData_FromForm?.date),
     };
@@ -610,7 +609,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
                 autoComplete: "off",
                 placeholder: "Pieces in pack",
               },
-              validCondintion: (number) => {
+              validCondintion: (number: number) => {
                 if (Number(number) > 0) {
                   return true;
                 } else {
@@ -723,11 +722,19 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
     }
   });
 
+
+  const CalculateTotalCost = () => {
+    let totalCost = 0;
+    for (var i = 0; i < purchaseDetails.ALLitemsSelected.length; i++) {
+      totalCost = Number(totalCost) + Number(purchaseDetails.ALLitemsSelected[i]?.total_cost);
+    }
+    return totalCost;
+  };
   return (
     <main
-      className="relative flex w-full h-full "
+      className="relative flex w-full h-full"
       style={{
-        backgroundColor: "white",
+        backgroundColor: "white", height: "calc(100% - 48px)"
       }}
     >
       {bools?.showSwitchPurchaseTypeModal && (
@@ -835,7 +842,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
           />
 
           {
-            <section className="leftsideContainer  w-full flex border-2 border-l-0 ">
+            <section className="leftsideContainer  w-full h-full flex border-2 border-l-0 ">
               <div className="leftside w-full h-full">
                 <div className=" w-full flex h-full">
                   <div className="formsContainer p-2 border-r-2">
@@ -856,7 +863,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
                       {feedback} <span style={{ visibility: "hidden" }}>.</span>
                     </div>
 
-                    <Form
+                    <RegularForm
                       ref={formRef}
                       formData={PiecesformData}
                       setformData={setPiecesformData}
@@ -864,141 +871,143 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
                       onCancel={onFormCancel}
                       formType={{ regular: true }}
                       Styles={{
-                        form: {
-                          width: "fit-content",
-                          top: "0px",
-                        },
-                        row: {
-                          display: "flex",
-                          fontWeight: "normal",
-                          width: "fit-content",
-                          height: "35px",
-                        },
-
-                        input: {
-                          borderTop: "0px",
-                          borderLeft: "0px",
-                          borderRight: "0px",
-                          borderRadius: "0px",
-                          margin: "0px",
-                          padding: "0px",
-                        },
-
-                        label: {
-                          minWidth: "90px",
-                        },
+                        row: { display: "flex", width: "300px" },
+                        label: { width: "150px", textAlign: "left" },
+                        form: { width: "fit-content", textAlign: "center" },
+                        input: { borderTop: "0px", borderLeft: "0px", borderRight: "0px", borderRadius: "0px" }
                       }}
                     />
                   </div>
-                  {purchaseDetails?.ALLitemsSelected?.length > 0 && (
-                    <List
-                      Date={{
-                        //date is the only prop that is an object, all other props are arrays of objects {title, data}
-                        title: "Date",
-                        data: purchaseDetails?.dateofPurcahse,
-                      }}
-                      CompleteData={{
-                        title: [
-                          "id",
-                          "name",
-                          "quantity",
-                          "price",
-                          "add-ons",
-                          "total discount",
-                          "total vat",
-                          "total cost",
-                          "total pieces",
-                        ],
-                        data: [...purchaseDetails?.ALLitemsSelected],
-                        detailsExpanded: purchaseDetails?.detailsExpanded,
-                      }}
-                      Columns={{
-                        title: ["Name", "Price", "Quantity", "Total"],
-                        data: purchaseDetails?.ALLitemsSelected?.map(
-                          ({ name, price, quantity, total_cost }) => {
-                            //  console.log(item);
-                            return {
-                              name,
-                              price,
-                              quantity,
-                              total_cost,
-                            };
-                          }
-                        ),
-                      }}
-                      OnTopOfTable={[
-                        {
-                          title: "Supplier",
-                          data: Object.values(purchaseDetails?.Supplier),
-                        },
-                      ]}
-                      Actions={[
-                        {
-                          title: "details",
-                          action: (id) => {
-                            if (
-                              purchaseDetails.detailsExpanded?.find((ID) => {
-                                return ID === id;
-                              })
-                            ) {
-                              setPurcahseDetails((p) => {
-                                return {
-                                  ...p,
-                                  detailsExpanded:
-                                    purchaseDetails.detailsExpanded?.filter(
-                                      (ID) => {
-                                        return ID !== id;
-                                      }
-                                    ),
-                                };
-                              });
-                            } else {
-                              setPurcahseDetails((p) => {
-                                return {
-                                  ...p,
-                                  detailsExpanded: [
-                                    ...purchaseDetails?.detailsExpanded,
-                                    id,
-                                  ],
-                                };
-                              });
+
+
+                  <section className="w-full h-full">
+                    <div style={{ height: "calc(100% - 50px)" }}>
+                      <List
+                        Date={{
+                          //date is the only prop that is an object, all other props are arrays of objects {title, data}
+                          title: "Date",
+                          data: purchaseDetails?.dateofPurcahse,
+                        }}
+                        CompleteData={{
+                          title: [
+                            "id",
+                            "name",
+                            "quantity",
+                            "price",
+                            "add-ons",
+                            "total discount",
+                            "total vat",
+                            "total cost",
+                            "total pieces",
+                          ],
+                          data: [...purchaseDetails?.ALLitemsSelected],
+                          detailsExpanded: purchaseDetails?.detailsExpanded,
+                        }}
+                        Columns={{
+                          title: ["Name", "Price", "Quantity", "Total"],
+                          data: purchaseDetails?.ALLitemsSelected?.map(
+                            ({ name, price, quantity, total_cost }) => {
+                              let costToCurrency = convertToCurrency(total_cost);
+                              let priceToCurrency = convertToCurrency(price);
+                              return {
+                                name,
+                                priceToCurrency,
+                                quantity,
+                                costToCurrency,
+                              };
                             }
+                          ),
+                        }}
+                        OnTopOfTable={[
+                          {
+                            title: "Supplier",
+                            data: Object.values(purchaseDetails?.Supplier),
                           },
-                        },
-                        {
-                          title: "delete",
-                          btnColor: "red",
-                          action: (id) => {
-                            if (
-                              purchaseDetails?.ALLitemsSelected?.length === 1
-                            ) {
-                              //onFormCancel empties allItemsSelected and detailsOpened
-                              //onFormCancel also sets supplier and data back into form
-                              onFormCancel();
-                              setPurcahseDetails((p) => {
-                                return {
-                                  ...p,
-                                  ALLitemsSelected: [],
-                                };
-                              });
-                            } else {
-                              setPurcahseDetails((p) => {
-                                return {
-                                  ...p,
-                                  ALLitemsSelected:
-                                    purchaseDetails?.ALLitemsSelected?.filter(
-                                      (element) => {
-                                        return element?.id !== id;
-                                      }
-                                    ),
-                                };
-                              });
-                            }
+                        ]}
+                        Actions={[
+                          {
+                            title: "details",
+                            action: (id: any) => {
+                              if (
+                                purchaseDetails.detailsExpanded?.find((ID) => {
+                                  return ID === id;
+                                })
+                              ) {
+                                setPurcahseDetails((p) => {
+                                  return {
+                                    ...p,
+                                    detailsExpanded:
+                                      purchaseDetails.detailsExpanded?.filter(
+                                        (ID) => {
+                                          return ID !== id;
+                                        }
+                                      ),
+                                  };
+                                });
+                              } else {
+                                setPurcahseDetails((p) => {
+                                  return {
+                                    ...p,
+                                    detailsExpanded: [
+                                      ...purchaseDetails?.detailsExpanded,
+                                      id,
+                                    ],
+                                  };
+                                });
+                              }
+                            },
                           },
-                        },
-                      ]}
-                    />
-                  )}
+                          {
+                            title: "delete",
+                            btnColor: "red",
+                            action: (id: any) => {
+                              if (
+                                purchaseDetails?.ALLitemsSelected?.length === 1
+                              ) {
+                                //onFormCancel empties allItemsSelected and detailsOpened
+                                //onFormCancel also sets supplier and data back into form
+                                onFormCancel();
+                                setPurcahseDetails((p) => {
+                                  return {
+                                    ...p,
+                                    ALLitemsSelected: [],
+                                  };
+                                });
+                              } else {
+                                setPurcahseDetails((p) => {
+                                  return {
+                                    ...p,
+                                    ALLitemsSelected:
+                                      purchaseDetails?.ALLitemsSelected?.filter(
+                                        (element) => {
+                                          return element?.id !== id;
+                                        }
+                                      ),
+                                  };
+                                });
+                              }
+                            },
+                          },
+                        ]}
+                      />
+                    </div>
+
+                    <div className="border-b-2 h-[50px]  relative  bg-white  ">
+                      <div className="relative h-full  flex justify-between ">
+                        <div className="">
+                          <span className="text-xl font-bold relative left-2">
+                            GHC {convertToCurrency(CalculateTotalCost().toString())}
+                          </span>
+                        </div>
+                        <button className="px-2 hover:bg-slate-700 text-white bg-slate-600">
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+
+
+
+                  </section>
                 </div>
               </div>
             </section>

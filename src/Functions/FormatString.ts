@@ -185,3 +185,15 @@ export const replaceWhiteSpaceWithDash = (username: string) => {
     return "";
   }
 };
+
+export const convertToCurrency = (value: any) => {
+  if (!(value)) {
+    throw new Error(`Expected parameter be a string but got ${value}`)
+  } else {
+    let localeString = parseFloat(value.toString())?.toLocaleString();
+    let decimalPoints = parseFloat(value).toFixed(2).split(".")[1]
+
+
+    return `${localeString.split(".")[0]}.${decimalPoints}`
+  }
+}

@@ -8,10 +8,10 @@ import { useEffect } from "react";
 import {
   iFormSubComponent,
   iForwardedBySelect,
-} from "../Interfaces/Interfaces";
+} from "../../../Interfaces/Interfaces";
 
 const Select = React.forwardRef<iForwardedBySelect, iFormSubComponent>(
-  ({ formDataObject, REF, inputRefs }, ref) => {
+  ({ formDataObject, REF, inputRefs, formType, Styles }, ref) => {
     useImperativeHandle(ref, () => {
       return {
         setSelectedValue: setSelectedItem,
@@ -55,17 +55,31 @@ const Select = React.forwardRef<iForwardedBySelect, iFormSubComponent>(
       };
     }, [hideSelectOptions]);
 
+    const inputStyle = {
+      valid: "border-2  border-slate-200 rounded-lg w-full mb-2 ",
+      invlaid: "border-0 border-b-2 border-red-500 mb-2",
+    };
+
     return (
-      <main className="relative  ">
+      <main className="relative" style={{ width: "100%" }}>
         <input
-          style={{
-            margin: "0px auto",
+          className={inputStyle.valid}
+          style={!formType?.regular ? {
             padding: "0px",
+            margin: "0px",
+            border: "0px",
+            outline: "none",
             width: "calc(100% - 10px)",
             position: "relative",
             left: "5px",
+            backgroundColor: "transparent",
+            ...Styles.input
+          } : {
             outline: "none",
-            border: "0px",
+            width: "calc(100% ",
+            position: "relative",
+            backgroundColor: "transparent",
+            ...Styles?.input
           }}
           autoComplete={formDataObject?.input?.autoComplete}
           id={formDataObject?.label?.toLowerCase()}
@@ -98,8 +112,8 @@ const Select = React.forwardRef<iForwardedBySelect, iFormSubComponent>(
                     child instanceof Object && child?.id
                       ? child?.id
                       : child instanceof Object && child?._id
-                      ? child?._id
-                      : index
+                        ? child?._id
+                        : index
                   }
                 >
                   <button
@@ -109,9 +123,8 @@ const Select = React.forwardRef<iForwardedBySelect, iFormSubComponent>(
                       formDataObject.data = child;
                       setSelectedItem(
                         child instanceof Object
-                          ? `${child?.name ? child?.name : ""} ${
-                              child?.type ? child?.type : ""
-                            } ${child?.size ? child?.size : ""}`
+                          ? `${child?.name ? child?.name : ""} ${child?.type ? child?.type : ""
+                          } ${child?.size ? child?.size : ""}`
                           : child
                       );
                       setShowChildren(false);
@@ -119,9 +132,8 @@ const Select = React.forwardRef<iForwardedBySelect, iFormSubComponent>(
                   >
                     {child instanceof Object
                       ? " " +
-                        ` ${child?.name ? child?.name : ""} ${
-                          child?.type ? child?.type : ""
-                        } ${child?.size ? child?.size : ""}`
+                      ` ${child?.name ? child?.name : ""} ${child?.type ? child?.type : ""
+                      } ${child?.size ? child?.size : ""}`
                       : " " + child}
                   </button>
                 </div>

@@ -1,5 +1,5 @@
 import { useImperativeHandle, useState } from "react";
-import { iFormSubComponent, iForwaredByRadio } from "../Interfaces/Interfaces";
+import { iFormSubComponent, iForwaredByRadio } from "../../../Interfaces/Interfaces";
 import React from "react";
 
 const Radio = React.forwardRef<iForwaredByRadio, iFormSubComponent>(

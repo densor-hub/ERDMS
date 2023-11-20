@@ -56,37 +56,12 @@ const List = ({
     gridColumns = gridColumns + `${100 / lengthOfArray + "%"} `;
   }
 
-  const CalculateTotalCost = () => {
-    let totalCost = 0;
-    for (var i = 0; i < Columns?.data?.length; i++) {
-      totalCost = Number(totalCost) + Number(Columns?.data[i]?.total_cost);
-    }
-    return totalCost;
-  };
+
 
   //pagination
   return (
-    <main className="border-l-2 w-full h-full relative">
+    <main className="border-l-2 border-b-2 w-full h-full relative">
       <section>
-        {Columns?.data[0] && (
-          <div className="border-b-2 h-[50px]  relative  bg-white  ">
-            <div className="relative h-full  flex justify-between ">
-              <div className="">
-                <span>Total Cost </span>
-                {"-- "}
-                <span className="text-xl font-bold">
-                  GHS{" "}
-                  {parseFloat(
-                    CalculateTotalCost().toString()
-                  )?.toLocaleString()}
-                </span>
-              </div>
-              <button className="px-2 hover:bg-slate-700 text-white bg-slate-600">
-                Submit
-              </button>
-            </div>
-          </div>
-        )}
         {Columns?.data[0] &&
           (Date?.title?.length > 0 || Date?.data?.length > 0) && (
             <div className="text-sm text-center h-[15px]">
@@ -175,8 +150,8 @@ const IndividualRecord = ({
       <div
         className={
           index % 2 === 0
-            ? "grid bg-white h-[50px] hover:bg-slate-500/20"
-            : "grid bg-slate-100/50 w-full h-[50px] hover:bg-slate-500/20"
+            ? "grid bg-white h-fit min-h-[50px] hover:bg-slate-500/20"
+            : "grid bg-slate-100 w-full h-fit min-h-[50px] hover:bg-slate-500/20"
         }
         key={uuid()}
         style={{ gridTemplateColumns: gridColumns }}

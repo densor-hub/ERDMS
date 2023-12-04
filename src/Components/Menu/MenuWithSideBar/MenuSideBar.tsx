@@ -4,25 +4,29 @@ import { AiOutlineRight } from "react-icons/ai";
 import { createPathname } from "../../../Functions/FormatString.ts";
 import React from "react";
 import {
-  iMenucontenChildrenObject,
-  iMenucontentObject,
+  iMenuWithSideBarObject,
+  iMenuContenChildrenObject,
 } from "../../../Interfaces/Interfaces.js";
 
-const MenuGrandChildren = ({ currentContent }) => {
+interface iMenuGrandChildren {
+  currentContent: iMenuWithSideBarObject
+}
+
+const MenuSideBar = ({ currentContent }: iMenuGrandChildren) => {
   //current content from Menu in UI
   return (
-    currentContent?.content?.length > 0 && (
+    currentContent?.sideBarContent?.length > 0 && (
       <main className="bg-slate-600 min-h-[560px] h-full">
         <div className="pt-11">
-          {currentContent?.content?.length > 0 &&
-            currentContent?.content.map(
-              (element: iMenucontentObject, index: number) => {
+          {currentContent?.sideBarContent?.length > 0 &&
+            currentContent?.sideBarContent.map(
+              (element: iMenuContenChildrenObject, index: number) => {
                 return (
                   <div
                     key={index}
                     className={index === 0 ? "border-t-4 border-slate-300" : ""}
                   >
-                    <MenuGrandChildrenBody element={element} />
+                    <MenuSideBarContent element={element} />
                   </div>
                 );
               }
@@ -33,9 +37,10 @@ const MenuGrandChildren = ({ currentContent }) => {
   );
 };
 
-export default MenuGrandChildren;
+export default MenuSideBar;
 
-const MenuGrandChildrenBody = ({ element }) => {
+const MenuSideBarContent = ({ element }) => {
+  console.log(element)
   const [showChildren, setShowChildren] = useState(false);
 
   return (
@@ -79,7 +84,7 @@ const MenuGrandChildrenBody = ({ element }) => {
               <section className="bg-slate-400 text-zinc-700 ">
                 {element.children.map(
                   (
-                    childrenElement: iMenucontenChildrenObject,
+                    childrenElement: iMenuContenChildrenObject,
                     index: number
                   ) => {
                     return (

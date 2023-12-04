@@ -1,4 +1,4 @@
-import Menu from "../Components/Menu/MenuWithSideBar.tsx";
+import Menu from "../Components/Menu/MenuWithSideBar/Index.tsx";
 import NavBar from "../Components/NavBar.tsx";
 import AddPersonForm from "../Components/Form/FormWithNavigation.tsx";
 import PageRightSide from "../Components/PageRightSide.tsx";

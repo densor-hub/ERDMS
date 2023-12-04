@@ -1,20 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import { CovertMonthNumbersToAlphabets } from "../Functions/DateFunctions.ts";
+import { CovertMonthNumbersToAlphabets } from "../../Functions/DateFunctions.ts";
 import axios from "axios";
-import Modal from "./Modal.tsx";
-import List from "./List.tsx";
-import PageRightSide from "./PageRightSide.tsx";
-
-import "../index.css";
-import RegularForm from "./Form/RegularForm.tsx";
+import Modal from "../../Components/Modal.tsx";
+import List from "../../Components/List.tsx";
+import "../../index.css";
+import RegularForm from "../../Components/Form/RegularForm.tsx";
 import {
   insertArrayItem,
   removeArrayItem,
-} from "../Functions/FormatArraysAndObjects.ts";
-import { convertToCurrency } from "../Functions/FormatString.ts";
-import { iFormDataObject } from "../Interfaces/Interfaces.ts";
+} from "../../Functions/FormatArraysAndObjects.ts";
+import { convertToCurrency } from "../../Functions/FormatString.ts";
+import { iFormDataObject } from "../../Interfaces/Interfaces.ts";
 
-const PurchaseForm = ({ TypeOfPurchase }) => {
+const PurchaseForm = () => {
   const ConvertNANtoZero = (data: any) => {
     if (!Number(data)) {
       return 0;
@@ -263,26 +261,7 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
     }
   };
 
-  //CHANGING FORM'S titles buttons COLOR
-  const piecesBtnRef = useRef<HTMLButtonElement | null>(null);
-  const packsBtnRef = useRef<HTMLButtonElement | null>(null);
 
-  useEffect(() => {
-    if (purchaseDetails.specificPurchase === purcahseType.pieces) {
-      piecesBtnRef.current.style.backgroundColor = colors.currentBtnColor;
-      piecesBtnRef.current.style.color = colors.f3f3f3;
-    } else {
-      piecesBtnRef.current.style.backgroundColor = colors.f3f3f3;
-      piecesBtnRef.current.style.color = colors.currentBtnColor;
-    }
-    if (purchaseDetails.specificPurchase === purcahseType.packs) {
-      packsBtnRef.current.style.backgroundColor = colors.currentBtnColor;
-      packsBtnRef.current.style.color = colors.f3f3f3;
-    } else {
-      packsBtnRef.current.style.backgroundColor = colors.f3f3f3;
-      packsBtnRef.current.style.color = colors.currentBtnColor;
-    }
-  }, [purchaseDetails.specificPurchase]);
 
   //close filterBox
 
@@ -752,102 +731,13 @@ const PurchaseForm = ({ TypeOfPurchase }) => {
         {bools?.showLoading && <div>LOADING....</div>}
 
         <div className="PURCHASEComponentContainer flex h-full">
-          <PageRightSide
-            appName={"CYNOSURE"}
-            actions={[
-              {
-                ref: piecesBtnRef,
-                label: `${TypeOfPurchase} ${purcahseType?.pieces}`,
-                onClick: () => {
-                  if (
-                    purchaseDetails?.specificPurchase?.trim()?.toLowerCase() !==
-                    purcahseType?.pieces?.trim()?.toLowerCase()
-                  ) {
-                    if (checkForOngoingOperation()) {
-                      setBools((p) => {
-                        return { ...p, showSwitchPurchaseTypeModal: true };
-                      });
-                    } else {
-                      formRef?.current?.clearInputs();
-                      setPurcahseDetails((p) => {
-                        return { ...p, specificPurchase: purcahseType?.pieces };
-                      });
-
-                      let indexOfItemToBeRemoved = PiecesformData.indexOf(
-                        PiecesformData.find((element) => {
-                          return (
-                            element.label?.toLowerCase() ===
-                            "Pcs in Packs"?.toLowerCase()
-                          );
-                        })
-                      );
-                      setPiecesformData((p) => {
-                        return removeArrayItem(p, indexOfItemToBeRemoved);
-                      });
-                      // setPiecesformData([
-                      //   ...PiecesformData.slice(0, indexOfItemToBeRemoved),
-                      //   ...PiecesformData.slice(indexOfItemToBeRemoved + 1),
-                      // ]);
-                    }
-                  }
-                },
-              },
-              {
-                ref: packsBtnRef,
-                label: `${TypeOfPurchase} ${purcahseType?.packs}`,
-                onClick: () => {
-                  if (
-                    purchaseDetails?.specificPurchase?.trim()?.toLowerCase() !==
-                    purcahseType?.packs?.trim()?.toLowerCase()
-                  ) {
-                    if (checkForOngoingOperation()) {
-                      setBools((p) => {
-                        return { ...p, showSwitchPurchaseTypeModal: true };
-                      });
-                    } else {
-                      setPurcahseDetails((p) => {
-                        return { ...p, specificPurchase: purcahseType?.packs };
-                      });
-
-                      formRef?.current?.clearInputs();
-
-                      setPiecesformData((p) => {
-                        return insertArrayItem(
-                          p,
-                          {
-                            label: "Pcs in Packs",
-                            data: "",
-                            input: {
-                              type: "number",
-                              required: true,
-                              autoComplete: "off",
-                              placeholder: "Pieces in pack",
-                            },
-                            validCondintion: (number) => {
-                              if (Number(number) > 0) {
-                                return true;
-                              } else {
-                                return false;
-                              }
-                            },
-                          },
-                          2
-                        );
-                      });
-                    }
-                  }
-                },
-              },
-            ]}
-          />
-
           {
             <section className="leftsideContainer  w-full h-full flex border-2 border-l-0 ">
               <div className="leftside w-full h-full">
                 <div className=" w-full flex h-full">
                   <div className="formsContainer p-2 border-r-2">
                     <h4 className="text-center text-lg relative top-6">
-                      {TypeOfPurchase}
+                      {"Purchase"}
                       <span style={{ color: colors.errorColor }}>
                         <i>{` ${purchaseDetails.specificPurchase}`} </i>
                       </span>

@@ -26,8 +26,12 @@ const CreateBranch = lazy(() => {
   return import("./Pages/CreateBranch.tsx");
 });
 
-const PurchaseItem = lazy(() => {
-  return import("./Pages/PurchaseItems.tsx");
+const PurchasePieces = lazy(() => {
+  return import("./Pages/Purchase/PiecesPage.tsx");
+});
+
+const PurchasePacks = lazy(() => {
+  return import("./Pages/Purchase/PacksPage.tsx");
 });
 
 const AddEmployee = lazy(() => {
@@ -50,7 +54,8 @@ const router = createBrowserRouter([
       { path: "/private/add-customer", Component: AddCustomer },
       { path: "/private/add-supplier", Component: AddSupplier },
       { path: "/private/create-branch", Component: CreateBranch },
-      { path: "/private/purchase-items", Component: PurchaseItem },
+      { path: "/private/purchase-pieces", Component: PurchasePieces },
+      { path: "/private/purchase-packs", Component: PurchasePacks },
       { path: "/private/employ", Component: AddEmployee },
     ],
   },

@@ -14,17 +14,23 @@ export interface iFormWithNavigationContentObject {
   formData: Array<iFormDataObject>;
 }
 
-export interface iMenucontentContainer {
-  id: string;
-  content: iMenucontentObject[];
+export interface iMenuContentContainer {
+  content: iMenuContentObject[];
 }
 
-export interface iMenucontentObject {
-  title?: string;
-  children?: Array<iMenucontenChildrenObject>;
+export interface iMenuWithSideBarObject {
+  label: string,
+  icon: any,
+  sideBarContent: iMenuContentObject[]
 }
 
-export interface iMenucontenChildrenObject {
+export interface iMenuContentObject {
+  title: string;
+  children?: Array<iMenuContenChildrenObject>;
+  path?: string
+}
+
+export interface iMenuContenChildrenObject {
   title: string;
 }
 

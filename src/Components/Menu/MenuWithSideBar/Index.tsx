@@ -1,36 +1,37 @@
-import MenuChild from "./MWSB-Sub-components/MWSB_Child.tsx";
-import MenuGrandChildren from "./MWSB-Sub-components/MWSB_GrandChildren.tsx";
+import MenuItem from "./MenuItem.tsx";
+import SideBarContent from "./MenuSideBar.tsx";
 import { useState, useRef } from "react";
-import { useOutsideClicked } from "../../Hooks/useOutSideClicked.jsx";
+import { useOutsideClicked } from "../../../Hooks/useOutSideClicked.jsx";
 import React from "react";
-import { iMenucontentContainer } from "../../Interfaces/Interfaces.ts";
+import { iMenuWithSideBarObject } from "../../../Interfaces/Interfaces.ts";
 
-const MenuWithSideBar = ({headers, sideBarContent}) => {
-  
 
+interface iMenuWithSideBar {
+  content: iMenuWithSideBarObject[];
+}
+
+const MenuWithSideBar = ({ content }: iMenuWithSideBar) => {
   const [currentContent, setCurrentContent] =
-    useState<iMenucontentContainer | null>(null);
+    useState<iMenuWithSideBarObject | null>(null);
   const MenuRef = useRef();
 
   //onclick function passed to MenuChild to set current MenuContent to be displayed
-  const onClick = (content: iMenucontentContainer) => {
-    setCurrentContent(content);
+  const onClick = (selectedContent: iMenuWithSideBarObject) => {
+    setCurrentContent(selectedContent);
   };
 
   //when outside of Menu is Clicked
   useOutsideClicked(MenuRef, setCurrentContent, [], [currentContent]);
 
-  
   return (
     <main className={"flex w-fit h-scren min-h-fit"} ref={MenuRef} >
       <section className="w-32 h-full  bg-slate-700 ">
-        {headers?.map((elements, index) => {
+        {content?.map((elements: iMenuWithSideBarObject, index: number) => {
           return (
-            <MenuChild
+            <MenuItem
               key={index}
-              label={elements?.label}
               onClick={onClick}
-              content={sideBarContent}
+              entity={elements}
               currentContent={currentContent}
               icon={elements.icon}
             />
@@ -40,12 +41,12 @@ const MenuWithSideBar = ({headers, sideBarContent}) => {
 
       <section
         className={
-          currentContent?.content?.length > 0
+          currentContent?.sideBarContent?.length > 0
             ? "relative right-10 w-60 translate-x-10 transition-transform duration-100 ease-in"
             : " relative left-10  transition-transform duration-[1s] "
         }
       >
-        <MenuGrandChildren currentContent={currentContent} />
+        <SideBarContent currentContent={currentContent} />
       </section>
     </main>
   );

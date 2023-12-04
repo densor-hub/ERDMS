@@ -413,11 +413,7 @@ const FieldsetForm = forwardRef(
     };
 
     const ON_CANCEL = () => {
-      console.log(
-        formData?.find((element) => {
-          return element?.data !== "";
-        })
-      );
+
       if (
         inputRefs.current?.find((element) => {
           return element.value?.length > 0;

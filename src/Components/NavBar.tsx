@@ -4,11 +4,11 @@ import UserProfileMenu from "./UserProfileMenu.tsx";
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import { useOutsideClicked } from "../Hooks/useOutSideClicked";
-import { iMenucontenChildrenObject } from "../Interfaces/Interfaces.ts";
+import { iMenuContenChildrenObject } from "../Interfaces/Interfaces.ts";
 import React from "react";
 
 const NavBar = () => {
-  const userProfileMenuItems: Array<iMenucontenChildrenObject> = [
+  const userProfileMenuItems: Array<iMenuContenChildrenObject> = [
     { title: "Edit profile" },
     { title: "Configure app" },
     { title: "Sign out" },

@@ -1,8 +1,8 @@
 import React from "react"
-const OrgmanMenu = () => {
+const MenuWithDropdown = () => {
     return <main>
 
     </main>
 }
 
-export default OrgmanMenu
+export default MenuWithDropdown

@@ -27,11 +27,11 @@ const CreateBranch = lazy(() => {
 });
 
 const PurchasePieces = lazy(() => {
-  return import("./Pages/Purchase/PiecesPage.tsx");
+  return import("./Pages/Purchase/PurchasePiecesPage.tsx");
 });
 
 const PurchasePacks = lazy(() => {
-  return import("./Pages/Purchase/PacksPage.tsx");
+  return import("./Pages/Purchase/PurchasePacksPage.tsx");
 });
 
 const AddEmployee = lazy(() => {
